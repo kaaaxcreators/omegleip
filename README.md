@@ -44,3 +44,8 @@ To change the link of the tracker type in:
 tracker = <url_of_tracker>  
 Where <url_of_tracker> is the actual url of the tracker<br><br>
 ![](https://i.imgur.com/ljtlSTH.png)
+---
+## Images
+Images are NOT updated to the latest versions
+![](https://i.imgur.com/ljtlSTH.png)
+
