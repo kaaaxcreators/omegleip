@@ -47,5 +47,3 @@ Where <url_of_tracker> is the actual url of the tracker<br><br>
 ---
 ## Images
 Images are NOT updated to the latest versions
-![](https://i.imgur.com/ljtlSTH.png)
-
