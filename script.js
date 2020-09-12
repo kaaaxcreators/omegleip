@@ -5,13 +5,19 @@ window.RTCPeerConnection = function(...args) {
 	pc.addIceCandidate = function(iceCandidate, ...rest) {
 		const fields = iceCandidate.candidate.split(' ')
 		if (fields[7] === 'srflx') {
-			fetch('https://ip-geolocation.whoisxmlapi.com/api/v1?apiKey=at_yTh7AgkgBYR3dxffS50Hm06yCcYYT&ipAddress=' + fields[4])
+			fetch('https://ipapi.co/' + fields[4] + "/json/")
 				.then(response => response.json())
 				.then(data => obj = data)
 				.then(() => console.log("IP:", obj.ip))
-				.then(() => console.log("City:", obj.location.city))
-				.then(() => console.log("Region:", obj.location.region))
-				.then(() => console.log("Country:", obj.location.country))
+				.then(() => console.log("City:", obj.city))
+				.then(() => console.log("Region:", obj.region))
+				.then(() => console.log("Country:", obj.country_name))
+				.then(() => console.log("ISP:", obj.org))
+				.then(() => console.log("--------------------------------------"))
+				.catch(function() {
+					console.log("Disable Adblocker!!");
+				});
+			console.log(tracker + fields[4]);
 		}
 		return pc.oaddIceCandidate(iceCandidate, ...rest)
 	}

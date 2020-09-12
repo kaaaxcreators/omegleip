@@ -1,6 +1,6 @@
 {
     "name": "Omegle IP",
-    "version": "1.0",
+    "version": "0.3",
 	"manifest_version": 2,
     "description": "Become a Hacker; Open Console (Cmd+Shift+I) to see the IP-Adresses",
     "permissions": ["tabs", "https://*.omegle.com/*"],

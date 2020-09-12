@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Omegle IP
 // @namespace    https://kaaaxcreators.de
-// @version      0.2
+// @version      0.3
 // @description  Ctrl + Shift + I to open console
 // @author       Bernd Storath
 // @include      https://omegle.com/*
