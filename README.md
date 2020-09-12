@@ -1,7 +1,14 @@
 # Omegle IP
 ## Get the IP from Strangers
 ---
-## [OmegleIP.js](https://raw.githubusercontent.com/kaaax0815/omegleip/master/OmegleIP.js)
+## [OmegleIP.js](https://raw.githubusercontent.com/kaaaxcreators/omegleip/master/OmegleIP.js)
+Open the Console by pressing: **CTRL + Shift + I**  
+Insert the content into the console<br><br>
+![](https://i.imgur.com/2IZJCzq.png)  
+Press **Enter**
+Now you see the ip
+---
+## [OmegleIP - Tracker.js](https://raw.githubusercontent.com/kaaaxcreators/omegleip/master/OmegleIP%20-%20Tracker.js)
 Open the Console by pressing: **CTRL + Shift + I**  
 Insert the content into the console<br><br>
 ![](https://i.imgur.com/2CcP4pi.png)  
@@ -37,3 +44,8 @@ To change the link of the tracker type in:
 tracker = <url_of_tracker>  
 Where <url_of_tracker> is the actual url of the tracker<br><br>
 ![](https://i.imgur.com/ljtlSTH.png)
+---
+## Images
+Images are NOT updated to the latest versions
+![](https://i.imgur.com/ljtlSTH.png)
+
