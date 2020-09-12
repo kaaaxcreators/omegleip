@@ -4,9 +4,10 @@
 ## [OmegleIP.js](https://raw.githubusercontent.com/kaaaxcreators/omegleip/master/OmegleIP.js)
 Open the Console by pressing: **CTRL + Shift + I**  
 Insert the content into the console<br><br>
-![](https://i.imgur.com/2CcP4pi.png)  
+![](https://i.imgur.com/2IZJCzq.png)  
 Press **Enter**
 Now you see the ip
+---
 ## [OmegleIP - Tracker.js](https://raw.githubusercontent.com/kaaaxcreators/omegleip/master/OmegleIP%20-%20Tracker.js)
 Open the Console by pressing: **CTRL + Shift + I**  
 Insert the content into the console<br><br>
