@@ -42,8 +42,7 @@ Open the Console by pressing: **CTRL + Shift + I**
 ## Extensions
 [Firefox](https://addons.mozilla.org/de/firefox/addon/omegle-ip/) 
 [Opera](https://addons.opera.com/de/extensions/details/omegle-ip/)  
-[Chrome]
-[Edge]   
+[Edge](https://microsoftedge.microsoft.com/addons/detail/omegle-ip/dfiedbgblldfoipmbnpikkamljjdjbbb)  
 Open the Console by pressing: **CTRL + Shift + I**
 ---
 ## Tracker
