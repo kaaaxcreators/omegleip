@@ -39,6 +39,13 @@ Install Tampermonkey
 Press "Install Script"  
 Open the Console by pressing: **CTRL + Shift + I**
 ---
+## Extensions
+[Firefox](https://addons.mozilla.org/de/firefox/addon/omegle-ip/)  
+[Chrome]
+[Opera]
+[Edge]   
+Open the Console by pressing: **CTRL + Shift + I**
+---
 ## Tracker
 To change the link of the tracker type in:  
 tracker = <url_of_tracker>  
