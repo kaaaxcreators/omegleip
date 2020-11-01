@@ -1,6 +1,20 @@
 # Omegle IP
 ## Get the IP from Strangers
 ---
+Table of contents
+=================
+
+<!--ts-->
+   * [OmegleIP.js](#omegleipjs)
+   * [OmegleIP - Tracker.js](#omegleip---trackerjs)
+   * [OmegleIP - API.js](#omegleip---apijsn)
+   * [OmegleIP - API - Tracker.js](#omegleip---api---trackerjs)
+   * [OmegleIP - API - Tracker - NoConsole.js](#omegleip---api---tracker---noconsolejs)
+   * [Userscript](#userscript)
+   * [Extensions](#extensions)
+   * [Tracker](#tracker)
+<!--te-->
+---
 ## [OmegleIP.js](https://raw.githubusercontent.com/kaaaxcreators/omegleip/master/OmegleIP.js)
 Open the Console by pressing: **CTRL + Shift + I**  
 Insert the content into the console<br><br>
