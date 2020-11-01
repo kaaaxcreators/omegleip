@@ -40,10 +40,10 @@ Press "Install Script"
 Open the Console by pressing: **CTRL + Shift + I**
 ---
 ## Extensions
-[Firefox](https://addons.mozilla.org/de/firefox/addon/omegle-ip/) 
+[Firefox](https://addons.mozilla.org/de/firefox/addon/omegle-ip/)  
 [Opera](https://addons.opera.com/de/extensions/details/omegle-ip/)  
-[Chrome]
-[Edge]   
+[Edge](https://microsoftedge.microsoft.com/addons/detail/omegle-ip/dfiedbgblldfoipmbnpikkamljjdjbbb)  
+Chrome costs money, so it wont be published there in the near future  
 Open the Console by pressing: **CTRL + Shift + I**
 ---
 ## Tracker
