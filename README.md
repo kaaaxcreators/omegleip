@@ -30,6 +30,16 @@ Press **Enter**
 Now you see the Geolocation in the Console  
 To see more details about the IP pess the link
 ---
+## [OmegleIP - API - Tracker - NoConsole.js](https://raw.githubusercontent.com/kaaaxcreators/omegleip/master/OmegleIP%20-%20API%20-%20Tracker%20-%20NoConsole.js)
+Open the Console by pressing: **CTRL + Shift + I**
+Insert the content into the console<br><br>
+![](https://i.imgur.com/TD69zFq.png)  
+Press **Enter**    
+Close the Console by pressing: **CTRL + Shift + I**  
+Now you see the Geolocation in the Chat Window
+![](https://i.imgur.com/xg4GLzd.png)
+To see more details about the IP pess "More Information"
+---
 ## [Userscript](https://greasyfork.org/de/scripts/410842-omegle-ip)
 Install Tampermonkey  
 [Firefox](https://addons.mozilla.org/de/firefox/addon/tampermonkey/)
