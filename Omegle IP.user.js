@@ -2,7 +2,7 @@
 // @name         Omegle IP
 // @namespace    https://kaaaxcreators.de
 // @version      0.4
-// @description  Ctrl + Shift + I to open console
+// @description  You see the IP in the chat window
 // @author       Bernd Storath
 // @include      https://omegle.com/*
 // @include      https://www.omegle.com/*
@@ -11,7 +11,7 @@
 
 (function() {
     console.log("--------------------------------------------------");
-    console.log("Instructions: https://github.com/kaaax0815/omegleip");
+    console.log("Instructions: https://github.com/kaaaxcreators/omegleip");
     console.log("--------------------------------------------------");
     tracker = "https://whatismyipaddress.com/ip/"
 window.oRTCPeerConnection  = window.oRTCPeerConnection || window.RTCPeerConnection
