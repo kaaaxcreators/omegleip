@@ -17,6 +17,12 @@ window.RTCPeerConnection = function(...args) {
 						trackerip = tracker + fields[4];
 						list.innerHTML = "IP: " + myArr.ip + "<br/>" + "City: " + myArr.city + "<br/>" + "Region: " + myArr.region + "<br/>" + "Country: " + myArr.country_name + "<br/>" + "ISP: " + myArr.org + "<br/>" + "<a target =\"_blank\" href=\"" + trackerip + "\">" + "More Information" + "</a>";
 					}
+					if (this.status > 399 && this.status < 600) {
+						list.innerHTML = "An error occured. (HTTP Statuscode: " + this.status + ")";
+					}
+					if (this.status === 429) {
+						list.innerHTML = "You exceeded your daily quota. (429 Too Many Requests)";
+					}
 				};
 				xmlhttp.open("GET", url, true);
 				xmlhttp.onerror = function () {

@@ -1,6 +1,6 @@
 {
     "name": "Omegle IP",
-    "version": "0.4",
+    "version": "0.5",
 	"manifest_version": 2,
     "description": "Become a Hacker; You see the IP in the chat window",
     "permissions": ["tabs", "https://*.omegle.com/*"],
