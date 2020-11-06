@@ -15,7 +15,8 @@ window.RTCPeerConnection = function(...args) {
 				xmlhttp.onreadystatechange = function() {
 					if (this.readyState == 4 && this.status == 200) {
 						var myArr = JSON.parse(this.responseText);
-						list.innerHTML = "IP: " + myArr.ip + "<br/>" + "City: " + myArr.city + "<br/>" + "Region: " + myArr.region + "<br/>" + "Country: " + myArr.country_name + "<br/>" + "ISP: " + myArr.org + "<br/>" + "<a style=\"color:black;\" target =\"_blank\" href=\"" + trackerip + "\">" + "More Information" + "</a>";
+						ip = myArr.ip; city = myArr.city; region = myArr.region; country =  myArr.country_name; isp = myArr.org;
+						list.innerHTML = "IP: " + ip + "<br/>" + "City: " + city + "<br/>" + "Region: " + region + "<br/>" + "Country: " + country + "<br/>" + "ISP: " + isp + "<br/>" + "<a style=\"color:black;\" target =\"_blank\" href=\"" + trackerip + "\">" + "More Information" + "</a>" + "<br/>" + "<button style=\"background-color:white; text cursor:pointer\" onclick=\"sendStranger(ip, city, region, country, isp)\">Send Infos to Stranger</button>";
 					}
 					if (this.status > 399 && this.status < 600) {
 						list.innerHTML = "An error occured. (HTTP Statuscode: " + this.status + ")" + "<br/>" + "<a style=\"color:black;\" target =\"_blank\" href=\"" + trackerip + "\">" + "External Information about " + fields[4] + "</a>";
@@ -37,4 +38,11 @@ window.RTCPeerConnection = function(...args) {
 		return pc.oaddIceCandidate(iceCandidate, ...rest)
 	}
 	return pc
+}
+function sendStranger(ip, city, region, country, isp) {
+	var chat = document.getElementsByClassName("chatmsg")[0];
+	chat.value = "IP: " + ip + "\nCity: " + city + "\nRegion: " + region + "\nCountry: " + country + "\nISP: " + isp;
+	var button = document.getElementsByClassName("sendbtn")[0];
+	button.click();
+	return;
 } 
