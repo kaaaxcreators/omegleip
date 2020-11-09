@@ -1,9 +1,16 @@
-// Version: 0.6
+// ==UserScript==
+// @name         Omegle IP
+// @namespace    https://kaaaxcreators.de
+// @version      0.6
+// @description  You see the IP in the chat window
+// @author       Bernd Storath
+// @include      https://omegle.com/*
+// @include      https://www.omegle.com/*
+// @grant        none
+// ==/UserScript==
 
-getIp(); // starts the retrieving of geolocation and ip
-
-function getIp(){
-	tracker = "https://whatismyipaddress.com/ip/" // sets whats the link you get redirected to when pressing "More Information"
+(function() {
+	tracker = "https://whatismyipaddress.com/ip/"; // sets whats the link you get redirected to when pressing "More Information"
 	window.oRTCPeerConnection  = window.oRTCPeerConnection || window.RTCPeerConnection // connects to the rtc client
 	window.RTCPeerConnection = function(...args) {
 		const pc = new window.oRTCPeerConnection(...args)
@@ -21,7 +28,7 @@ function getIp(){
 						if (this.readyState == 4 && this.status == 200) { // if succeeds
 							var myArr = JSON.parse(this.responseText); // gets the reponse as json objects
 							ip = myArr.ip; city = myArr.city; region = myArr.region; country =  myArr.country_name; isp = myArr.org;
-							list.innerHTML = "IP: " + ip + "<br/>" + "City: " + city + "<br/>" + "Region: " + region + "<br/>" + "Country: " + country + "<br/>" + "ISP: " + isp + "<br/>" + "<a style=\"color:black;\" target =\"_blank\" href=\"" + trackerip + "\">" + "More Information" + "</a>" + "<br/>" + "<button style=\"background-color:white; text cursor:pointer\" onclick=\"sendStranger(ip, city, region, country, isp)\">Send Infos to Stranger</button>";
+							list.innerHTML = "IP: " + ip + "<br/>" + "City: " + city + "<br/>" + "Region: " + region + "<br/>" + "Country: " + country + "<br/>" + "ISP: " + isp + "<br/>" + "<a style=\"color:black;\" target =\"_blank\" href=\"" + trackerip + "\">" + "More Information" + "</a>";
 						}
 						if (this.status > 399 && this.status < 600) { // error handling on html error 400 - 599 -> use fallback api
 							try {
@@ -32,7 +39,7 @@ function getIp(){
 									if (this.readyState == 4 && this.status == 200) { // if succeeds
 										var fallback = JSON.parse(this.responseText); // gets the reponse as json objects
 										ip = fallback.ip; city = fallback.city; region = fallback.region; country =  fallback.country_name; isp = fallback.asn.name;
-										list.innerHTML = "Using Fallback API:" + "<br/>" + "IP: " + ip + "<br/>" + "City: " + city + "<br/>" + "Region: " + region + "<br/>" + "Country: " + country + "<br/>" + "ISP: " + isp + "<br/>" + "<a style=\"color:black;\" target =\"_blank\" href=\"" + trackerip + "\">" + "More Information" + "</a>" + "<br/>" + "<button style=\"background-color:white; text cursor:pointer\" onclick=\"sendStranger(ip, city, region, country, isp)\">Send Infos to Stranger</button>";
+										list.innerHTML = "Using Fallback API:" + "<br/>" + "IP: " + ip + "<br/>" + "City: " + city + "<br/>" + "Region: " + region + "<br/>" + "Country: " + country + "<br/>" + "ISP: " + isp + "<br/>" + "<a style=\"color:black;\" target =\"_blank\" href=\"" + trackerip + "\">" + "More Information" + "</a>";
 									}
 									if (this.status > 399 && this.status < 600) { // error handling on html error 400 - 599
 										list.innerHTML = "An error occured even on the fallback api, when before the api had a error. (HTTP Statuscode: " + this.status + ")" + "<br/>" + "<a style=\"color:black;\" target =\"_blank\" href=\"" + trackerip + "\">" + "External Information about " + fields[4] + "</a>";
@@ -62,7 +69,7 @@ function getIp(){
 									if (this.readyState == 4 && this.status == 200) { // if succeeds
 										var fallback = JSON.parse(this.responseText); // gets the reponse as json objects
 										ip = fallback.ip; city = fallback.city; region = fallback.region; country =  fallback.country_name; isp = fallback.asn.name;
-										list.innerHTML = "Using Fallback API:" + "<br/>" + "IP: " + ip + "<br/>" + "City: " + city + "<br/>" + "Region: " + region + "<br/>" + "Country: " + country + "<br/>" + "ISP: " + isp + "<br/>" + "<a style=\"color:black;\" target =\"_blank\" href=\"" + trackerip + "\">" + "More Information" + "</a>" + "<br/>" + "<button style=\"background-color:white; text cursor:pointer\" onclick=\"sendStranger(ip, city, region, country, isp)\">Send Infos to Stranger</button>";
+										list.innerHTML = "Using Fallback API:" + "<br/>" + "IP: " + ip + "<br/>" + "City: " + city + "<br/>" + "Region: " + region + "<br/>" + "Country: " + country + "<br/>" + "ISP: " + isp + "<br/>" + "<a style=\"color:black;\" target =\"_blank\" href=\"" + trackerip + "\">" + "More Information" + "</a>";
 									}
 									if (this.status > 399 && this.status < 600) { // error handling on html error 400 - 599
 										list.innerHTML = "An error occured, when before you exceeded your daily quata. (HTTP Statuscode: " + this.status + ")" + "<br/>" + "<a style=\"color:black;\" target =\"_blank\" href=\"" + trackerip + "\">" + "External Information about " + fields[4] + "</a>";
@@ -98,11 +105,4 @@ function getIp(){
 		}
 		return pc
 	}
-}
-function sendStranger(ip, city, region, country, isp) {
-	var chat = document.getElementsByClassName("chatmsg")[0];
-	chat.value = "IP: " + ip + "\nCity: " + city + "\nRegion: " + region + "\nCountry: " + country + "\nISP: " + isp;
-	var button = document.getElementsByClassName("sendbtn")[0];
-	button.click();
-	return;
-} 
+})();

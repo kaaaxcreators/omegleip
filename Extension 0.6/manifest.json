@@ -1,14 +1,14 @@
 {
     "name": "Omegle IP",
-    "version": "0.5",
+    "version": "0.6",
 	"manifest_version": 2,
     "description": "Become a Hacker; You see the IP in the chat window",
-    "permissions": ["tabs", "https://*.omegle.com/*"],
-	"web_accessible_resources": ["script.js"],
+    "permissions": ["tabs", "https://*.omegle.com/*", "storage"],
+	"web_accessible_resources": ["inject.js"],
     "content_scripts" : [{
         "matches" : ["https://*.omegle.com/*"],
 		"run_at": "document_end",
-        "js" : ["myscript.js"]
+        "js" : ["contentscript.js"]
     }],
 	"icons": {
 		"16": "16.png",
