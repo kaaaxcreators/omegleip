@@ -68,7 +68,6 @@ Open the Console by pressing: **CTRL + Shift + I**
 [Opera](https://addons.opera.com/de/extensions/details/omegle-ip/)  
 [Edge](https://microsoftedge.microsoft.com/addons/detail/omegle-ip/dfiedbgblldfoipmbnpikkamljjdjbbb)  
 Chrome costs money, so it wont be published there in the near future  
-Open the Console by pressing: **CTRL + Shift + I**
 ---
 ## Tracker
 To change the link of the tracker type in:  
