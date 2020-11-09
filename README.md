@@ -52,7 +52,7 @@ Press **Enter**
 Close the Console by pressing: **CTRL + Shift + I**  
 Now you see the Geolocation in the Chat Window
 ![](https://i.imgur.com/xg4GLzd.png)
-To see more details about the IP pess "More Information"
+To see more details about the IP press "More Information"
 ---
 ## [Userscript](https://greasyfork.org/de/scripts/410842-omegle-ip)
 Install Tampermonkey  
