@@ -5,10 +5,10 @@ Table of contents
 =================
 
 <!--ts-->
-   * [OmegleIP.js](#omegleipjs)
-   * [OmegleIP - Tracker.js](#omegleip---trackerjs)
-   * [OmegleIP - API.js](#omegleip---apijsn)
-   * [OmegleIP - API - Tracker.js](#omegleip---api---trackerjs)
+   * [OmegleIP.js - Discontinued](#omegleipjs)
+   * [OmegleIP - Tracker.js - Discontinued](#omegleip---trackerjs)
+   * [OmegleIP - API.js - Discontinued](#omegleip---apijs)
+   * [OmegleIP - API - Tracker.js - Discontinued](#omegleip---api---trackerjs)
    * [OmegleIP - API - Tracker - NoConsole.js](#omegleip---api---tracker---noconsolejs)
    * [Userscript](#userscript)
    * [Extensions](#extensions)
