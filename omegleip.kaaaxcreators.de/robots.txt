@@ -2,10 +2,10 @@ User-agent: *
 Disallow: /impressum.html
 Disallow: /datenschutz.html
 Disallow: /impressum
-Disallow: /datenschutz
-Disallow: /sitemap.xml
-Disallow: /sitemap
-Disallow: /scribbler.js
-Disallow: /scribbler
+Disallow: /impressum.html
+Disallow: /69299a082c3b0008f338ada158260e03
+Disallow: /69299a082c3b0008f338ada158260e03.html
+Disallow: /googledadfb7caeffcc7b7.html
+Disallow: /googledadfb7caeffcc7b7
 
 Sitemap: https://kaaaxcreators.de/sitemap.xml
