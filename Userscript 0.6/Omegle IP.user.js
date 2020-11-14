@@ -1,8 +1,10 @@
 // ==UserScript==
 // @name         Omegle IP
+// @name:de      Omegle IP
 // @namespace    https://kaaaxcreators.de
 // @version      0.6
 // @description  You see the IP in the chat window
+// @description:de  Du siehst die IP im Chat
 // @author       Bernd Storath
 // @include      https://omegle.com/*
 // @include      https://www.omegle.com/*
