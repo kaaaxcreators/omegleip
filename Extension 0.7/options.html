@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Omegle IP</title>
+		<style>
+			.options {  border-color: black;}.options td {  padding: 10px;}.options .col1 {  text-align: right;}.options
+			.col2 {  width: 100%;}
+			.col2 * { width:100%;}
+		</style>
+	</head>
+	<body>
+		<table class="options">
+			<tr>
+				<td class="col1">Tracker: </td>
+				<td class="col2"><input type="text" id="tracker" name="tracker"></td>
+			<tr>
+			<tr>
+				<td class="col1">Troll Button: </td>
+				<td class="col2"><input type="checkbox" id="troll" name="troll"></td>
+			<tr>
+			<tr>
+				<td class="col1">Enable: </td>
+				<td class="col2"><input type="checkbox" id="enable" name="enable"></td>
+			<tr>
+		</table>
+
+		<div id="status"></div>
+		<button id="save">Save</button>
+		Omegle will be refreshed!
+
+		<script src="options.js"></script>
+	</body>
+</html>
