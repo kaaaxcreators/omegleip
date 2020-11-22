@@ -2,7 +2,11 @@ var s = document.createElement('script');
 s.src = chrome.runtime.getURL('inject.js');
 s.onload = function() {
     this.remove();
-	chrome.storage.sync.get(['tracker', 'troll', 'enable'], function (obj) {
+    chrome.storage.sync.get({
+  		tracker: "https://whatismyipaddress.com/ip/",
+  		troll: "true",
+  		enable: "true",
+  	}, function (obj) {
 		tracker = obj.tracker;
 		trollChecked = obj.troll;
 		enableChecked =  obj.enable;
@@ -15,4 +19,3 @@ s.onload = function() {
     });
 };
 (document.head || document.documentElement).appendChild(s);
-

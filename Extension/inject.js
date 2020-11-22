@@ -1,3 +1,4 @@
+// Start
 document.addEventListener('ChromeExtensionData', function (e) { // waits for variable from contentscript
   var data = e.detail;
   tracker = data.tracker;
@@ -9,7 +10,24 @@ document.addEventListener('ChromeExtensionData', function (e) { // waits for var
 	getIp(tracker, trollChecked);
   }
 });
+// Pause
 
+// Google Analytics
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-111172400-6']);
+_gaq.push(['_trackPageview']);
+(function() {
+var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+ga.src = 'https://ssl.google-analytics.com/ga.js';
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+
+// Pushes Events to Google
+function push(what, why) {
+	_gaq.push(['_trackEvent', what, why]);
+}
+
+// Resume
 function getIp(tracker, trollChecked){
 	/** feature idea:
 	const apis = ["http://ipwhois.app/json/", ];
@@ -60,18 +78,18 @@ function getIp(tracker, trollChecked){
 									}
 									if (this.status > 399 && this.status < 600) { // error handling on html error 400 - 599
 										list.innerHTML = "An error occured. (HTTP Statuscode: " + this.status + ")" + "<br/>" + "<a style=\"color:black;\" target =\"_blank\" href=\"" + trackerip + "\">" + "External Information about " + fields[4] + "</a>";
-										
+
 									}
 									if (this.status === 429) { // // error handling on html error 429
 										list.innerHTML = "You exceeded your daily quota. (429 Too Many Requests)" + "<br/>" + "<a style=\"color:black;\" target =\"_blank\" href=\"" + trackerip + "\">" + "External Information about " + fields[4] + "</a>";
-										
+
 									}
 								};
 								xmlhttp.open("GET", fallbackapi, true);
 								xmlhttp.onerror = function () {
 								  list.innerHTML = "Try disabling the adblocker";
-								};	
-								xmlhttp.send(); // send the request 
+								};
+								xmlhttp.send(); // send the request
 							}
 							catch (err){
 								list.innerHTML = "A Error occurred: " + err.message;
@@ -95,18 +113,18 @@ function getIp(tracker, trollChecked){
 									}
 									if (this.status > 399 && this.status < 600) { // error handling on html error 400 - 599
 										list.innerHTML = "An error occured. (HTTP Statuscode: " + this.status + ")" + "<br/>" + "<a style=\"color:black;\" target =\"_blank\" href=\"" + trackerip + "\">" + "External Information about " + fields[4] + "</a>";
-										
+
 									}
 									if (this.status === 429) { // error handling
 										list.innerHTML = "You exceeded your daily quota. (429 Too Many Requests)" + "<br/>" + "<a style=\"color:black;\" target =\"_blank\" href=\"" + trackerip + "\">" + "External Information about " + fields[4] + "</a>";
-										
+
 									}
 								};
 								xmlhttp.open("GET", fallbackapi, true);
 								xmlhttp.onerror = function () {
 								  list.innerHTML = "Try disabling the adblocker";
-								};	
-								xmlhttp.send(); // send the request 
+								};
+								xmlhttp.send(); // send the request
 							}
 							catch (err){
 								list.innerHTML = "A Error occurred: " + err.message;
@@ -116,8 +134,8 @@ function getIp(tracker, trollChecked){
 					xmlhttp.open("GET", api, true);
 					xmlhttp.onerror = function () {
 					  list.innerHTML = "Try disabling the adblocker";
-					};	
-					xmlhttp.send(); // send the request 
+					};
+					xmlhttp.send(); // send the request
 				}
 				catch (err){
 					list.innerHTML = "A Error occurred: " + err.message;
@@ -128,10 +146,11 @@ function getIp(tracker, trollChecked){
 		return pc
 	}
 }
-function sendStranger(ip, city, region, country, isp) {
+function sendStranger(ip, city, region, country, isp) { // send stranger own details to scare them
 	var chat = document.getElementsByClassName("chatmsg")[0];
 	chat.value = "IP: " + ip + "\nCity: " + city + "\nRegion: " + region + "\nCountry: " + country + "\nISP: " + isp;
 	var button = document.getElementsByClassName("sendbtn")[0];
 	button.click();
+  push("stranger", "clicked") // sends button click event to google
 	return;
-} 
+}
