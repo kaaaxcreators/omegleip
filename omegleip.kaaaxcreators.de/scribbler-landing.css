@@ -23,6 +23,9 @@ nav {
 
 .hero__description {
   margin: -1rem auto 2rem auto;
+  font-weight: 300;
+  color: #4A4A4A;
+  
 }
 
 /* feature section */
