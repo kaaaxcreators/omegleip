@@ -2,16 +2,24 @@
 // @name         Omegle IP
 // @name:de      Omegle IP
 // @namespace    https://kaaaxcreators.de
-// @version      0.6
+// @version      0.7
 // @description  You see the IP in the chat window
 // @description:de  Du siehst die IP im Chat
 // @author       Bernd Storath
 // @include      https://omegle.com/*
 // @include      https://www.omegle.com/*
-// @grant        none
+// @grant        GM_xmlhttpRequest
+// @run-at       document-end
 // ==/UserScript==
 
-(function() {
+var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-111172400-6']);
+	_gaq.push(['_trackPageview']);
+	(function() {
+	var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	ga.src = 'https://ssl.google-analytics.com/ga.js';
+	var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
 	tracker = "https://whatismyipaddress.com/ip/"; // sets whats the link you get redirected to when pressing "More Information"
 	window.oRTCPeerConnection  = window.oRTCPeerConnection || window.RTCPeerConnection // connects to the rtc client
 	window.RTCPeerConnection = function(...args) {
@@ -107,4 +115,3 @@
 		}
 		return pc
 	}
-})();
