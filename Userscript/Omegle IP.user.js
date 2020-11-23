@@ -8,7 +8,7 @@
 // @author       Bernd Storath
 // @include      https://omegle.com/*
 // @include      https://www.omegle.com/*
-// @grant        GM_xmlhttpRequest
+// @grant        none
 // @run-at       document-end
 // ==/UserScript==
 
