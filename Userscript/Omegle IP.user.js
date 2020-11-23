@@ -45,18 +45,18 @@
 									}
 									if (this.status > 399 && this.status < 600) { // error handling on html error 400 - 599
 										list.innerHTML = "An error occured even on the fallback api, when before the api had a error. (HTTP Statuscode: " + this.status + ")" + "<br/>" + "<a style=\"color:black;\" target =\"_blank\" href=\"" + trackerip + "\">" + "External Information about " + fields[4] + "</a>";
-										
+
 									}
 									if (this.status === 429) { // // error handling on html error 429
 										list.innerHTML = "You exceeded your daily quota even on the fallback api, when before the api had a error. (429 Too Many Requests)" + "<br/>" + "<a style=\"color:black;\" target =\"_blank\" href=\"" + trackerip + "\">" + "External Information about " + fields[4] + "</a>";
-										
+
 									}
 								};
 								xmlhttp.open("GET", fallbackapi, true);
 								xmlhttp.onerror = function () {
 								  list.innerHTML = "Try disabling the adblocker";
-								};	
-								xmlhttp.send(); // send the request 
+								};
+								xmlhttp.send(); // send the request
 							}
 							catch (err){
 								list.innerHTML = "A Error occurred: " + err.message;
@@ -75,18 +75,18 @@
 									}
 									if (this.status > 399 && this.status < 600) { // error handling on html error 400 - 599
 										list.innerHTML = "An error occured, when before you exceeded your daily quata. (HTTP Statuscode: " + this.status + ")" + "<br/>" + "<a style=\"color:black;\" target =\"_blank\" href=\"" + trackerip + "\">" + "External Information about " + fields[4] + "</a>";
-										
+
 									}
 									if (this.status === 429) { // error handling
 										list.innerHTML = "You exceeded your daily quota, when before you exceeded your daily quata. (429 Too Many Requests)" + "<br/>" + "<a style=\"color:black;\" target =\"_blank\" href=\"" + trackerip + "\">" + "External Information about " + fields[4] + "</a>";
-										
+
 									}
 								};
 								xmlhttp.open("GET", fallbackapi, true);
 								xmlhttp.onerror = function () {
 								  list.innerHTML = "Try disabling the adblocker";
-								};	
-								xmlhttp.send(); // send the request 
+								};
+								xmlhttp.send(); // send the request
 							}
 							catch (err){
 								list.innerHTML = "A Error occurred on the fallback api: " + err.message;
@@ -96,8 +96,8 @@
 					xmlhttp.open("GET", api, true);
 					xmlhttp.onerror = function () {
 					  list.innerHTML = "Try disabling the adblocker";
-					};	
-					xmlhttp.send(); // send the request 
+					};
+					xmlhttp.send(); // send the request
 				}
 				catch (err){
 					list.innerHTML = "A Error occurred: " + err.message;
