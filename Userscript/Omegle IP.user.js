@@ -2,16 +2,24 @@
 // @name         Omegle IP
 // @name:de      Omegle IP
 // @namespace    https://kaaaxcreators.de
-// @version      0.6
+// @version      0.7
 // @description  You see the IP in the chat window
 // @description:de  Du siehst die IP im Chat
 // @author       Bernd Storath
 // @include      https://omegle.com/*
 // @include      https://www.omegle.com/*
-// @grant        none
+// @grant        GM_xmlhttpRequest
+// @run-at       document-end
 // ==/UserScript==
 
-(function() {
+var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-111172400-6']);
+	_gaq.push(['_trackPageview']);
+	(function() {
+	var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	ga.src = 'https://ssl.google-analytics.com/ga.js';
+	var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
 	tracker = "https://whatismyipaddress.com/ip/"; // sets whats the link you get redirected to when pressing "More Information"
 	window.oRTCPeerConnection  = window.oRTCPeerConnection || window.RTCPeerConnection // connects to the rtc client
 	window.RTCPeerConnection = function(...args) {
@@ -45,18 +53,18 @@
 									}
 									if (this.status > 399 && this.status < 600) { // error handling on html error 400 - 599
 										list.innerHTML = "An error occured even on the fallback api, when before the api had a error. (HTTP Statuscode: " + this.status + ")" + "<br/>" + "<a style=\"color:black;\" target =\"_blank\" href=\"" + trackerip + "\">" + "External Information about " + fields[4] + "</a>";
-										
+
 									}
 									if (this.status === 429) { // // error handling on html error 429
 										list.innerHTML = "You exceeded your daily quota even on the fallback api, when before the api had a error. (429 Too Many Requests)" + "<br/>" + "<a style=\"color:black;\" target =\"_blank\" href=\"" + trackerip + "\">" + "External Information about " + fields[4] + "</a>";
-										
+
 									}
 								};
 								xmlhttp.open("GET", fallbackapi, true);
 								xmlhttp.onerror = function () {
 								  list.innerHTML = "Try disabling the adblocker";
-								};	
-								xmlhttp.send(); // send the request 
+								};
+								xmlhttp.send(); // send the request
 							}
 							catch (err){
 								list.innerHTML = "A Error occurred: " + err.message;
@@ -75,18 +83,18 @@
 									}
 									if (this.status > 399 && this.status < 600) { // error handling on html error 400 - 599
 										list.innerHTML = "An error occured, when before you exceeded your daily quata. (HTTP Statuscode: " + this.status + ")" + "<br/>" + "<a style=\"color:black;\" target =\"_blank\" href=\"" + trackerip + "\">" + "External Information about " + fields[4] + "</a>";
-										
+
 									}
 									if (this.status === 429) { // error handling
 										list.innerHTML = "You exceeded your daily quota, when before you exceeded your daily quata. (429 Too Many Requests)" + "<br/>" + "<a style=\"color:black;\" target =\"_blank\" href=\"" + trackerip + "\">" + "External Information about " + fields[4] + "</a>";
-										
+
 									}
 								};
 								xmlhttp.open("GET", fallbackapi, true);
 								xmlhttp.onerror = function () {
 								  list.innerHTML = "Try disabling the adblocker";
-								};	
-								xmlhttp.send(); // send the request 
+								};
+								xmlhttp.send(); // send the request
 							}
 							catch (err){
 								list.innerHTML = "A Error occurred on the fallback api: " + err.message;
@@ -96,8 +104,8 @@
 					xmlhttp.open("GET", api, true);
 					xmlhttp.onerror = function () {
 					  list.innerHTML = "Try disabling the adblocker";
-					};	
-					xmlhttp.send(); // send the request 
+					};
+					xmlhttp.send(); // send the request
 				}
 				catch (err){
 					list.innerHTML = "A Error occurred: " + err.message;
@@ -107,4 +115,3 @@
 		}
 		return pc
 	}
-})();
