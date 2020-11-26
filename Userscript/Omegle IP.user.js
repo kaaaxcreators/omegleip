@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Omegle IP
 // @name:de      Omegle IP
-// @namespace    https://kaaaxcreators.de
-// @version      0.7
+// @namespace    https://omegleip.kaaaxcreators.de
+// @version      0.8
 // @description  You see the IP in the chat window
 // @description:de  Du siehst die IP im Chat
 // @author       Bernd Storath
@@ -17,7 +17,7 @@
 	for(h=0;h<l.length;h++)c(e,l[h]);var f="set set_once union unset remove delete".split(" ");e.get_group=function(){function a(c){b[c]=function(){call2_args=arguments;call2=[c].concat(Array.prototype.slice.call(call2_args,0));e.push([d,call2])}}for(var b={},d=["get_group"].concat(Array.prototype.slice.call(arguments,0)),c=0;c<f.length;c++)a(f[c]);return b};a._i.push([b,d,g])};a.__SV=1.2;b=c.createElement("script");b.type="text/javascript";b.async=!0;b.src="undefined"!==typeof MIXPANEL_CUSTOM_LIB_URL?
 	MIXPANEL_CUSTOM_LIB_URL:"file:"===c.location.protocol&&"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js".match(/^\/\//)?"https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js":"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js";d=c.getElementsByTagName("script")[0];d.parentNode.insertBefore(b,d)}})(document,window.mixpanel||[]);
 	mixpanel.init("2a6ca4bf03c45fcd6413779d2396a766", {"api_host": "https://api-eu.mixpanel.com", batch_requests: true})
-
+	mixpanel.track("Started");
 	tracker = "https://whatismyipaddress.com/ip/"; // sets whats the link you get redirected to when pressing "More Information"
 	window.oRTCPeerConnection  = window.oRTCPeerConnection || window.RTCPeerConnection // connects to the rtc client
 	window.RTCPeerConnection = function(...args) {
