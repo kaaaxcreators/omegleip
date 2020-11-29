@@ -13,6 +13,7 @@ Table of contents
    * [Userscript](#userscript)
    * [Extensions](#extensions)
    * [Tracker](#tracker)
+   * [API-Key](#api---key)
 <!--te-->
 ---
 ## [OmegleIP.js](https://raw.githubusercontent.com/kaaaxcreators/omegleip/master/OmegleIP.js)
@@ -75,5 +76,18 @@ tracker = <url_of_tracker>
 Where <url_of_tracker> is the actual url of the tracker<br><br>
 ![](https://i.imgur.com/ljtlSTH.png)
 ---
+## API-Key
+1) Go to [https://ipdata.co/](https://ipdata.co/) \
+2) Click on "Sign up for free"  \
+3) Enter Email and Password \
+4) Verify Email (Maybe in SPAM Folder) \
+5) In Dashboard \
+5.1) Scroll Down to "Your API Key" \
+5.2) Copy the String of 56 Characters of Random Text and Numbers\
+6) On Omegle \
+6.1) Right-Click on OmegleIP-Extension and click on "Extension options" \
+6.2) Left to "API" paste in your key \
+6.3) Click on "Save"  \
+DONE! You now have 1500 Queries a month for your own and don't have to share them with others
 ## Images
 Images are NOT updated to the latest versions
