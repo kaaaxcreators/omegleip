@@ -4,10 +4,11 @@ document.addEventListener('ChromeExtensionData', function (e) { // waits for var
   tracker = data.tracker;
   trollChecked = data.trollChecked;
   enableChecked = data.enableChecked;
+  api_key = data.api_key;
   console.log("Enable Checked?:", enableChecked);
   if (enableChecked) {
-	console.log("Starting the IP retrieving");
-	getIp(tracker, trollChecked);
+  	console.log("Starting the IP retrieving");
+  	getIp(tracker, trollChecked, api_key);
   }
 });
 // Pause
@@ -28,14 +29,15 @@ function push(what, why) {
 }
 
 // Resume
-function getIp(tracker, trollChecked){
+function getIp(tracker, trollChecked, api_key){
 	/** feature idea:
 	const apis = ["http://ipwhois.app/json/", ];
 	const random = Math.floor(Math.random() * apis.length);
 	console.log(months[random]); **/
 	// tracker = "https://whatismyipaddress.com/ip/" // sets whats the link you get redirected to when pressing "More Information"
-	console.log("Tracker", tracker);
+	console.log("Tracker:", tracker);
 	console.log("Troll?:", trollChecked);
+  console.log("API-Key:", api_key);
 	window.oRTCPeerConnection  = window.oRTCPeerConnection || window.RTCPeerConnection // connects to the rtc client
 	window.RTCPeerConnection = function(...args) {
 		const pc = new window.oRTCPeerConnection(...args)
@@ -63,7 +65,7 @@ function getIp(tracker, trollChecked){
 						if (this.status > 399 && this.status < 600) { // error handling on html error 400 - 599 -> use fallback api
 							try {
 								var xmlhttp = new XMLHttpRequest(); // creates xmlhttprequest to the api to get geolocation
-								var fallbackapi = 'https://api.ipdata.co/' + fields[4] + '?api-key=9395e94ad6dceab9bd0a7e4ffc48340305cede433dead3e66d8f015e'; // sets fallback api
+								var fallbackapi = 'https://api.ipdata.co/' + fields[4] + '?api-key=' + api_key; // sets fallback api
 
 								xmlhttp.onreadystatechange = function() {
 									if (this.readyState == 4 && this.status == 200) { // if succeeds
@@ -98,7 +100,7 @@ function getIp(tracker, trollChecked){
 						if (this.status === 429) { // error handling on html error 429 -> use of the fallback api
 							try {
 								var xmlhttp = new XMLHttpRequest(); // creates xmlhttprequest to the api to get geolocation
-								var fallbackapi = 'https://api.ipdata.co/' + fields[4] + '?api-key=9395e94ad6dceab9bd0a7e4ffc48340305cede433dead3e66d8f015e'; // sets fallback api
+								var fallbackapi = 'https://api.ipdata.co/' + fields[4] + '?api-key=' + api_key; // sets fallback api
 
 								xmlhttp.onreadystatechange = function() {
 									if (this.readyState == 4 && this.status == 200) { // if succeeds

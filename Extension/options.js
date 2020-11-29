@@ -17,10 +17,12 @@ function push(what, why) {
 function save_options() {
 	var tracker = document.getElementById('tracker').value;
 	var troll = document.getElementById("troll").checked;
+	var api = document.getElementById('api').value;
 	var enable = document.getElementById("enable").checked;
 	chrome.storage.sync.set({
 		tracker: tracker,
 		troll: troll,
+		api:  api,
 		enable: enable,
 	}, function() {
 		// Update status to let user know options were saved and reloads omegle to take changes in place.
@@ -44,10 +46,12 @@ function restore_options() {
 	chrome.storage.sync.get({
 		tracker: "https://whatismyipaddress.com/ip/",
 		troll: "true",
+		api: "9395e94ad6dceab9bd0a7e4ffc48340305cede433dead3e66d8f015e",
 		enable: "true",
 	}, function(items) {
 		document.getElementById('tracker').value = items.tracker;
 		document.getElementById("troll").checked = items.troll;
+		document.getElementById("api").value = items.api;
 		document.getElementById("enable").checked = items.enable;
 	});
 }
@@ -75,4 +79,9 @@ var tracker = document.querySelector("input[name=tracker]");
 tracker.addEventListener( 'focusout', function() {
 		value = tracker.value;
     push("tracker", value)
+});
+var api = document.querySelector("input[name=api]");
+api.addEventListener( 'focusout', function() {
+		value = api.value;
+    push("api", value)
 });
