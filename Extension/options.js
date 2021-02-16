@@ -1,18 +1,3 @@
-// Inject Google Analytics
-	var _gaq = _gaq || [];
-	_gaq.push(['_setAccount', 'UA-111172400-5']);
-	_gaq.push(['_trackPageview']);
-	(function() {
-	var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-	ga.src = 'https://ssl.google-analytics.com/ga.js';
-	var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-	})();
-
-// Pushes Events to Google
-function push(what, why) {
-	_gaq.push(['_trackEvent', what, why]);
-}
-
 // Saves options to chrome.storage
 function save_options() {
 	var tracker = document.getElementById('tracker').value;
@@ -58,30 +43,3 @@ function restore_options() {
 // Event Listeners
 document.addEventListener('DOMContentLoaded', restore_options);
 document.getElementById('save').addEventListener('click', save_options);
-document.getElementById('save').addEventListener('click', push("save", "clicked"));
-var troll = document.querySelector("input[name=troll]");
-troll.addEventListener( 'change', function() {
-    if(this.checked) {
-        push("troll", "enable")
-    } else {
-        push("troll", "disable")
-    }
-});
-var enable = document.querySelector("input[name=enable]");
-enable.addEventListener( 'change', function() {
-    if(this.checked) {
-        push("enable", "enable")
-    } else {
-        push("enable", "disable")
-    }
-});
-var tracker = document.querySelector("input[name=tracker]");
-tracker.addEventListener( 'focusout', function() {
-		value = tracker.value;
-    push("tracker", value)
-});
-var api = document.querySelector("input[name=api]");
-api.addEventListener( 'focusout', function() {
-		value = api.value;
-    push("api", value)
-});

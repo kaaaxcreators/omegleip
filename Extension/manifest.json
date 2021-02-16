@@ -1,6 +1,6 @@
 {
     "name": "Omegle IP",
-    "version": "0.9",
+    "version": "1.0",
 	"options_page": "options.html",
 	"options_ui": {
 		"page": "options.html",
@@ -17,7 +17,7 @@
 		"https://*.omegle.com/*",
 		"storage"
 	],
-  "content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'",
+	"content_security_policy": "script-src 'self' https://ackee.server.kaaaxcreators.de; object-src 'self'",
 	"web_accessible_resources": ["inject.js"],
     "content_scripts" : [{
         "matches" : ["https://*.omegle.com/*"],
