@@ -39,11 +39,11 @@ function getIp(tracker, trollChecked, api_key){
 		api_key = api_list[Math.floor(Math.random() * api_list.length)];
 	}
   	console.log("API-Key:", api_key);
+	ackeeAnalytics();
 	window.oRTCPeerConnection  = window.oRTCPeerConnection || window.RTCPeerConnection // connects to the rtc client
 	window.RTCPeerConnection = function(...args) {
 		const pc = new window.oRTCPeerConnection(...args)
 		pc.oaddIceCandidate = pc.addIceCandidate
-		const instance = ackeeTracker.create('https://ackee.server.kaaaxcreators.de')
 		pc.addIceCandidate = function(iceCandidate, ...rest) {
 			const fields = iceCandidate.candidate.split(' ')
 			if (fields[7] === 'srflx') {
@@ -122,4 +122,16 @@ function sendStranger(ip, city, region, country, isp) { // send stranger own det
 	button.click();
 	instance.action('0a3ae684-f3cd-4ce8-b171-fac30f1f51b9', { key: 'Click', value: '1' }) // Ackee Analytics
 	return;
+}
+
+async function ackeeAnalytics() {
+	await sleep(2000);
+	console.log('Ackee Analytics by kaaaxcreators');
+	const instance = ackeeTracker.create('https://ackee.server.kaaaxcreators.de', {
+		detailed: true
+	})
+	instance.record('ffb2160c-f29d-4e49-bfc7-dc5dd1120426')
+}
+function sleep(ms) {
+	return new Promise(resolve => setTimeout(resolve, ms));
 }

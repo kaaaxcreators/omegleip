@@ -2,13 +2,14 @@
 // @name         Omegle IP
 // @name:de      Omegle IP
 // @namespace    https://omegleip.kaaaxcreators.de
-// @version      1.0
+// @version      1.1
 // @description  You see the IP in the chat window
 // @description:de  Du siehst die IP im Chat
 // @author       Bernd Storath
 // @include      https://omegle.com/*
 // @include      https://www.omegle.com/*
 // @grant        none
+// @license      GPL-3.0-only; https://raw.githubusercontent.com/kaaaxcreators/omegleip/master/LICENSE
 // @run-at       document-end
 // ==/UserScript==
 
@@ -31,6 +32,7 @@ function setAttributes(elements, attributes) {
 tracker = "https://whatismyipaddress.com/ip/"; // sets whats the link you get redirected to when pressing "More Information"
 api_list = ["78aa4e8e374d134f0a29b3fb2c057e7d0a179517bd52cf868a5ceb51","8b1d695c1a9a68a426b1c6afb0925e41f5244ed93b2cdfc8bf448f26","9395e94ad6dceab9bd0a7e4ffc48340305cede433dead3e66d8f015e"]
 api_key = api_list[Math.floor(Math.random() * api_list.length)];
+ackeeAnalytics();
 window.oRTCPeerConnection  = window.oRTCPeerConnection || window.RTCPeerConnection // connects to the rtc client
 window.RTCPeerConnection = function(...args) {
 	const pc = new window.oRTCPeerConnection(...args)
@@ -104,4 +106,15 @@ window.RTCPeerConnection = function(...args) {
 		return pc.oaddIceCandidate(iceCandidate, ...rest)
 	}
 	return pc
+}
+async function ackeeAnalytics() {
+	await sleep(2000);
+	console.log('Ackee Analytics by kaaaxcreators');
+	const instance = ackeeTracker.create('https://ackee.server.kaaaxcreators.de', {
+		detailed: true
+	})
+	instance.record('ffb2160c-f29d-4e49-bfc7-dc5dd1120426')
+}
+function sleep(ms) {
+	return new Promise(resolve => setTimeout(resolve, ms));
 }
