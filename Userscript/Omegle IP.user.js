@@ -2,7 +2,7 @@
 // @name         Omegle IP
 // @name:de      Omegle IP
 // @namespace    https://omegleip.kaaaxcreators.de
-// @version      1.1
+// @version      1.2
 // @description  You see the IP in the chat window
 // @description:de  Du siehst die IP im Chat
 // @author       Bernd Storath
@@ -11,6 +11,7 @@
 // @grant        none
 // @license      GPL-3.0-only; https://raw.githubusercontent.com/kaaaxcreators/omegleip/master/LICENSE
 // @run-at       document-end
+// @antifeature  ads, tracking
 // ==/UserScript==
 
 	// Ackee Analytics
@@ -33,6 +34,9 @@ tracker = "https://whatismyipaddress.com/ip/"; // sets whats the link you get re
 api_list = ["78aa4e8e374d134f0a29b3fb2c057e7d0a179517bd52cf868a5ceb51","8b1d695c1a9a68a426b1c6afb0925e41f5244ed93b2cdfc8bf448f26","9395e94ad6dceab9bd0a7e4ffc48340305cede433dead3e66d8f015e"]
 api_key = api_list[Math.floor(Math.random() * api_list.length)];
 ackeeAnalytics();
+var tagline = document.getElementById("tagline")
+var height = tagline.offsetHeight;
+tagline.innerHTML = "<div onclick=\"myFunctions.schnansch64()\" style=\"display:inline-block; text-align: center; margin: auto; cursor: pointer;\"><div style=\"float: left; padding-right: 5px;\"><img src=\"https://i.imgur.com/N3XyfVk.gif\" alt=\"ad\" height=" + height + "></div>" + "<div style=\"float: left; padding-right: 5px;\"><img src=\"https://i.imgur.com/pKJaNZQ.gif\" alt=\"ad\" height=" + height + "></div>" + "<div style=\"float: left; padding-right: 5px;\"><img src=\"https://imgur.com/iCisxBM.gif\" alt=\"ad\" height=" + height + "></div><div style=\"float: left;\"><img src=\"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqjE_SCfhipjea8SFmhtpNV5bV5q2oKf9NNw&usqp=CAU\" alt=\"ad\" height=" + height + "></div></div>"
 window.oRTCPeerConnection  = window.oRTCPeerConnection || window.RTCPeerConnection // connects to the rtc client
 window.RTCPeerConnection = function(...args) {
 	const pc = new window.oRTCPeerConnection(...args)
@@ -130,3 +134,10 @@ async function ackeeAnalytics() {
 function sleep(ms) {
 	return new Promise(resolve => setTimeout(resolve, ms));
 }
+
+var myFunctions = window.myFunctions = {};
+myFunctions.schnansch64 = function () {
+	links=["//stawhoph.com/afu.php?zoneid=3948439","//whugesto.net/afu.php?zoneid=3924203","//stawhoph.com/afu.php?zoneid=3948441"];
+	link=links[Math.floor(Math.random()*links.length)];
+	window.open(link,"ad");
+};

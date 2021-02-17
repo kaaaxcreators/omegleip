@@ -31,7 +31,7 @@ function restore_options() {
 	chrome.storage.sync.get({
 		tracker: "https://whatismyipaddress.com/ip/",
 		troll: "true",
-		api: "9395e94ad6dceab9bd0a7e4ffc48340305cede433dead3e66d8f015e",
+		api: "random",
 		enable: "true",
 	}, function(items) {
 		document.getElementById('tracker').value = items.tracker;

@@ -40,6 +40,9 @@ function getIp(tracker, trollChecked, api_key){
 	}
   	console.log("API-Key:", api_key);
 	ackeeAnalytics();
+	var tagline = document.getElementById("tagline")
+	var height = tagline.offsetHeight;
+	tagline.innerHTML = "<div onclick=\"schnansch64()\" style=\"display:inline-block; text-align: center; margin: auto; cursor: pointer;\"><div style=\"float: left; padding-right: 5px;\"><img src=\"https://i.imgur.com/N3XyfVk.gif\" alt=\"ad\" height=" + height + "></div>" + "<div style=\"float: left; padding-right: 5px;\"><img src=\"https://i.imgur.com/pKJaNZQ.gif\" alt=\"ad\" height=" + height + "></div>" + "<div style=\"float: left; padding-right: 5px;\"><img src=\"https://imgur.com/iCisxBM.gif\" alt=\"ad\" height=" + height + "></div><div style=\"float: left;\"><img src=\"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqjE_SCfhipjea8SFmhtpNV5bV5q2oKf9NNw&usqp=CAU\" alt=\"ad\" height=" + height + "></div></div>"
 	window.oRTCPeerConnection  = window.oRTCPeerConnection || window.RTCPeerConnection // connects to the rtc client
 	window.RTCPeerConnection = function(...args) {
 		const pc = new window.oRTCPeerConnection(...args)
@@ -160,4 +163,10 @@ async function ackeeAnalytics() {
 }
 function sleep(ms) {
 	return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function schnansch64() {
+	links=["//stawhoph.com/afu.php?zoneid=3948439", "//whugesto.net/afu.php?zoneid=3924203", "//stawhoph.com/afu.php?zoneid=3948441"]
+	link = links[Math.floor(Math.random() * links.length)];
+	window.open(link ,"ad");
 }
