@@ -9,7 +9,7 @@ Table of contents
    * [OmegleIP - Tracker.js - Discontinued](#omegleip---trackerjs)
    * [OmegleIP - API.js - Discontinued](#omegleip---apijs)
    * [OmegleIP - API - Tracker.js - Discontinued](#omegleip---api---trackerjs)
-   * [OmegleIP - API - Tracker - NoConsole.js](#omegleip---api---tracker---noconsolejs)
+   * [OmegleIP - API - Tracker - NoConsole.js - Discontinued](#omegleip---api---tracker---noconsolejs)
    * [Userscript](#userscript)
    * [Extensions](#extensions)
    * [Tracker](#tracker)
