@@ -1,6 +1,6 @@
 {
     "name": "Omegle IP",
-    "version": "1.2",
+    "version": "1.1",
 	"options_page": "options.html",
 	"options_ui": {
 		"page": "options.html",
