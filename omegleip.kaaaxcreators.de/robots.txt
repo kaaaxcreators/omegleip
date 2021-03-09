@@ -7,7 +7,9 @@ Disallow: /69299a082c3b0008f338ada158260e03
 Disallow: /69299a082c3b0008f338ada158260e03.html
 Disallow: /googledadfb7caeffcc7b7.html
 Disallow: /googledadfb7caeffcc7b7
+Disallow: /yandex_6c9d1271ba9ae14c.html
+Disallow: /yandex_6c9d1271ba9ae14c
 Disallow: /404.html
 Disallow: /404
 
-Sitemap: https://kaaaxcreators.de/sitemap.xml
+Sitemap: https://omegleip.kaaaxcreators.de/sitemap.xml
