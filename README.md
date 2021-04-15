@@ -1,5 +1,5 @@
-# Omegle IP
-## Get the IP from Strangers
+## Omegle IP
+### Get the IP from Strangers
 
 Table of contents
 
