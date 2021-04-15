@@ -2,6 +2,7 @@
 ### Get the IP from Strangers
 
 Table of contents
+=================
 
    * [OmegleIP.js - Discontinued](#omegleipjs)
    * [OmegleIP - Tracker.js - Discontinued](#omegleip---trackerjs)
@@ -13,7 +14,7 @@ Table of contents
    * [Tracker](#tracker)
    * [API-Key](#api---key)
 
-[OmegleIP.js](https://raw.githubusercontent.com/kaaaxcreators/omegleip/master/OmegleIP.js)
+## [OmegleIP.js](https://raw.githubusercontent.com/kaaaxcreators/omegleip/master/OmegleIP.js)
 
 Open the Console by pressing: **CTRL + Shift + I**  
 Insert the content into the console<br><br>
@@ -22,7 +23,7 @@ Press **Enter**
 Now you see the ip
 
 
-[OmegleIP - Tracker.js](https://raw.githubusercontent.com/kaaaxcreators/omegleip/master/OmegleIP%20-%20Tracker.js)
+## [OmegleIP - Tracker.js](https://raw.githubusercontent.com/kaaaxcreators/omegleip/master/OmegleIP%20-%20Tracker.js)
 Open the Console by pressing: **CTRL + Shift + I**  
 Insert the content into the console<br><br>
 ![](https://i.imgur.com/2CcP4pi.png)  
@@ -30,7 +31,7 @@ Press **Enter**
 To see the Geolocation of the IP press the link
 
 
-[OmegleIP - API.js](https://raw.githubusercontent.com/kaaax0815/omegleip/master/OmegleIP%20-%20API.js)
+## [OmegleIP - API.js](https://raw.githubusercontent.com/kaaax0815/omegleip/master/OmegleIP%20-%20API.js)
 
 Open the Console by pressing: **CTRL + Shift + I**  
 Insert the content into the console<br><br>
@@ -39,7 +40,7 @@ Press **Enter**
 Now you see the Geolocation in the Console
 
 
-[OmegleIP - API - Tracker.js](https://raw.githubusercontent.com/kaaax0815/omegleip/master/OmegleIP%20-%20API%20-%20Tracker.js)
+## [OmegleIP - API - Tracker.js](https://raw.githubusercontent.com/kaaax0815/omegleip/master/OmegleIP%20-%20API%20-%20Tracker.js)
 Open the Console by pressing: **CTRL + Shift + I**
 Insert the content into the console<br><br>
 ![](https://i.imgur.com/TD69zFq.png)  
@@ -48,7 +49,7 @@ Now you see the Geolocation in the Console
 To see more details about the IP pess the link
 
 
-[OmegleIP - API - Tracker - NoConsole.js](https://raw.githubusercontent.com/kaaaxcreators/omegleip/master/OmegleIP%20-%20API%20-%20Tracker%20-%20NoConsole.js)
+## [OmegleIP - API - Tracker - NoConsole.js](https://raw.githubusercontent.com/kaaaxcreators/omegleip/master/OmegleIP%20-%20API%20-%20Tracker%20-%20NoConsole.js)
 Open the Console by pressing: **CTRL + Shift + I**
 Insert the content into the console<br><br>
 ![](https://i.imgur.com/TD69zFq.png)  
@@ -59,7 +60,7 @@ Now you see the Geolocation in the Chat Window
 To see more details about the IP press "More Information"
 
 
-[Userscript](https://greasyfork.org/de/scripts/410842-omegle-ip)
+## [Userscript](https://greasyfork.org/de/scripts/410842-omegle-ip)
 Install Tampermonkey  
 [Firefox](https://addons.mozilla.org/de/firefox/addon/tampermonkey/)
 [Chrome](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=de)
@@ -69,21 +70,21 @@ Press "Install Script"
 Open the Console by pressing: **CTRL + Shift + I**
 
 
-Extensions
+## Extensions
 [Firefox](https://addons.mozilla.org/de/firefox/addon/omegle-ip/)  
 [Opera](https://addons.opera.com/de/extensions/details/omegle-ip/)  
 [Edge](https://microsoftedge.microsoft.com/addons/detail/omegle-ip/dfiedbgblldfoipmbnpikkamljjdjbbb)  
 Chrome costs money, so it wont be published there in the near future  
 
 
-Tracker
+## Tracker
 To change the link of the tracker type in:  
 tracker = <url_of_tracker>  
 Where <url_of_tracker> is the actual url of the tracker<br><br>
 ![](https://i.imgur.com/ljtlSTH.png)
 
 
-API-Key
+## API-Key
 1) Go to [https://ipdata.co/](https://ipdata.co/) \
 2) Click on "Sign up for free"  \
 3) Enter Email and Password \
@@ -98,5 +99,5 @@ API-Key
 DONE! You now have 1500 Queries a month for your own and don't have to share them with others
 
 
-Images
+## Images
 Images are NOT updated to the latest versions
