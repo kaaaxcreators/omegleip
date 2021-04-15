@@ -76,6 +76,8 @@ Firefox - Banned
 [Opera](https://addons.opera.com/de/extensions/details/omegle-ip/)  
 Edge - Banned  
 Chrome costs money, so it wont be published there in the near future  
+[All: ](https://github.com/kaaaxcreators/omegleip/raw/master/latest.zip)
+Downloadable ZIP, Extract and use Developer Mode -> [Docs](https://omegleip.kaaaxcreators.de/doc)
 
 
 ## Tracker
