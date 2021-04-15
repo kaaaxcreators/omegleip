@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: ❓ Ask a Question
+    url: https://github.com/kaaax0815/nodejsanalytics/discussions/new?category=q-a
+    about: Ask the community for help
