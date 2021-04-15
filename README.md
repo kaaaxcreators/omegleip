@@ -72,9 +72,9 @@ Open the Console by pressing: **CTRL + Shift + I**
 
 
 ## Extensions
-[Firefox](https://addons.mozilla.org/de/firefox/addon/omegle-ip/)  
+Firefox - Banned  
 [Opera](https://addons.opera.com/de/extensions/details/omegle-ip/)  
-[Edge](https://microsoftedge.microsoft.com/addons/detail/omegle-ip/dfiedbgblldfoipmbnpikkamljjdjbbb)  
+Edge - Banned  
 Chrome costs money, so it wont be published there in the near future  
 
 
