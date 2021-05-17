@@ -27,7 +27,8 @@ function setAttributes(elements, attributes) {
 	ga.src = 'https://ackee.server.kaaaxcreators.de/tracker.js';
 	setAttributes(ga, {
 		"data-ackee-server": "https://ackee.server.kaaaxcreators.de",
-		"data-ackee-domain-id": "ffb2160c-f29d-4e49-bfc7-dc5dd1120426"
+		"data-ackee-domain-id": "ffb2160c-f29d-4e49-bfc7-dc5dd1120426",
+    "data-ackee-opts": '{"detailed":true}'
 	})
 	var s = document.getElementsByTagName('script')[0];
 	s.parentNode.insertBefore(ga, s);
