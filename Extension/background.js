@@ -1,3 +1,4 @@
+"use strict"
 chrome.runtime.onMessage.addListener(function(message) {
     switch (message.action) {
         case "openOptionsPage":
@@ -35,14 +36,14 @@ async function getVersion() {
         .then(function (response) {
             response.json()
                 .then(function (json) {
-                    tag_name = json.tag_name
-                    version = tag_name.replace("v", "")
+                    var tag_name = json.tag_name
+                    var version = tag_name.replace("v", "")
                     if (tag_name.charAt(0) == "v" || tag_name.charAt(0) == "e") {
                         checkVersion(version)
                     }
                 })
                 .catch(function() {
-                    console.log("Error occured");
+                    console.log("Error occurred");
                 });
         });
 }
@@ -56,6 +57,6 @@ function checkVersion(version) {
 }
 
 function getNewUrl(version) {
-    url = 'version.html?version=' + version
+    var url = 'version.html?version=' + version
     chrome.tabs.create({ url: url });
 }
