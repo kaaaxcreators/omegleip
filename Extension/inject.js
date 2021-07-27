@@ -164,7 +164,7 @@ function getIp(tracker, trollChecked, api_key) {
 						link.textContent = "More Information"
 						baseElement.innerHTML = "IP: " + ip + "<br/>" + "City: " + city + "<br/>" + "Region: " + region + "<br/>" + "Country: " + country + "<br/>" + "ISP: " + isp + "<br/>" + "VPN: " + isVPN + "<br/>" + link.outerHTML;
 						if (abstractAPI) {
-							baseElement.innerHTML += "<br/>" + '<a href="https://www.abstractapi.com/" style="color:black;" target="_blank">Sponsored by AbstractAPI</a>';
+							baseElement.innerHTML += "<br/>" + '<a href="https://www.abstractapi.com/ip-geolocation-api" style="color:black;" target="_blank">IP geolocation data by AbstractAPI</a>';
 							abstractAPI = false;
 						}
 						if (trollChecked) {
