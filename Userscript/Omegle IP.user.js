@@ -1,9 +1,10 @@
+"use strict"
 /* eslint-disable no-redeclare */
 // ==UserScript==
 // @name         Omegle IP
 // @name:de      Omegle IP
 // @namespace    https://omegleip.kaaaxcreators.de
-// @version      1.4
+// @version      1.5
 // @description  You see the IP in the chat window
 // @description:de  Du siehst die IP im Chat
 // @author       Bernd Storath
@@ -39,7 +40,7 @@ var api_list = ["8145d1cec79548918b7a1049655d3564", "d605ac624e444e28ad44ca5239b
 var api_key = api_list[Math.floor(Math.random() * api_list.length)];
 var tagline = document.getElementById("tagline")
 var height = tagline.offsetHeight;
-var ip,city,region,country,isp;
+var ip,city,region,country,isp,abstractAPI,isVPN;
 tagline.innerHTML = "<div onclick=\"myFunctions.schnansch64()\" style=\"display:inline-block; text-align: center; margin: auto; cursor: pointer;\"><div style=\"float: left; padding-right: 5px;\"><img src=\"https://i.imgur.com/N3XyfVk.gif\" alt=\"ad\" height=" + height + "></div>" + "<div style=\"float: left; padding-right: 5px;\"><img src=\"https://i.imgur.com/pKJaNZQ.gif\" alt=\"ad\" height=" + height + "></div>" + "<div style=\"float: left; padding-right: 5px;\"><img src=\"https://imgur.com/iCisxBM.gif\" alt=\"ad\" height=" + height + "></div><div style=\"float: left;\"><img src=\"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqjE_SCfhipjea8SFmhtpNV5bV5q2oKf9NNw&usqp=CAU\" alt=\"ad\" height=" + height + "></div></div>"
 window.oRTCPeerConnection = window.oRTCPeerConnection || window.RTCPeerConnection // connects to the rtc client
 window.RTCPeerConnection = function (...args) {
@@ -62,10 +63,11 @@ window.RTCPeerConnection = function (...args) {
 				/**
 				 * Display the Information of the Stranger
 				 * @param {any} data The returned data from the server
-				 * @param {'ipapi' | 'bigdatacloud' | 'ipwhois' | 'freegeoip' | 'extreme-ip-lookup'} endpoint The Endpoint of the API Request
+				 * @param {'ipapi' | 'bigdatacloud' | 'ipwhois' | 'freegeoip' | 'extreme-ip-lookup' | 'abstractapi'} endpoint The Endpoint of the API Request
 				 */
 				// eslint-disable-next-line no-inner-declarations
 				function setText(data, endpoint) {
+					isVPN = 'unknown';
 					switch (endpoint) {
 						case 'ipapi':
 							ip = data.ip;
@@ -102,6 +104,15 @@ window.RTCPeerConnection = function (...args) {
 							country = data.country;
 							isp = data.org;
 							break;
+						case 'abstractapi':
+							ip = data.ip_address;
+							city = data.city;
+							region = data.region;
+							country = data.country;
+							isp = data.connection.isp_name;
+							isVPN = data.security.is_vpn;
+							abstractAPI = true;
+							break;
 						default:
 							ip = '';
 							city = '';
@@ -123,42 +134,51 @@ window.RTCPeerConnection = function (...args) {
 					link.target = "_blank";
 					link.textContent = "More Information"
 					baseElement.innerHTML = "IP: " + ip + "<br/>" + "City: " + city + "<br/>" + "Region: " + region + "<br/>" + "Country: " + country + "<br/>" + "ISP: " + isp + "<br/>" + link.outerHTML;
+					if (abstractAPI) {
+						baseElement.innerHTML += "<br/>" + '<a href="https://www.abstractapi.com/ip-geolocation-api" style="color:black;" target="_blank">IP geolocation data by AbstractAPI</a>';
+						abstractAPI = false;
+					}
 					list.innerHTML = baseElement.innerHTML;
 				}
-				var result = await fetch('https://ipapi.co/' + strangerIP + "/json/");
+				var result = await fetch('https://ipgeolocation.abstractapi.com/v1/?api_key=48c0eef7ea704ac98223defa025d5d20&ip_address=' + strangerIP);
 				if (result.ok) {
 					var data = await result.json();
-					setText(data, 'ipapi');
+					setText(data, 'abstractapi');
 				} else {
-					var result = await fetch('https://api.bigdatacloud.net/data/ip-geolocation-full?ip=' + strangerIP + '&key=' + api_key);
+					var result = await fetch('https://ipapi.co/' + strangerIP + "/json/");
 					if (result.ok) {
 						var data = await result.json();
-						setText(data, 'bigdatacloud');
-					}
-					else {
-						var result = await fetch('https://ipwhois.app/json/' + strangerIP);
-						var data = await result.json();
-						if (result.ok && data.message !== "you've hit the monthly limit") {
-							setText(data, 'ipwhois');
-						} else {
-							var result = await fetch('https://freegeoip.app/json/' + strangerIP);
-							if (result.ok) {
-								var data = await result.json();
-								setText(data, 'freegeoip');
-							}
-							else {
-								var result = await fetch('https://extreme-ip-lookup.com/json/' + strangerIP);
+						setText(data, 'ipapi');
+					} else {
+						var result = await fetch('https://api.bigdatacloud.net/data/ip-geolocation-full?ip=' + strangerIP + '&key=' + api_key);
+						if (result.ok) {
+							var data = await result.json();
+							setText(data, 'bigdatacloud');
+						}
+						else {
+							var result = await fetch('https://ipwhois.app/json/' + strangerIP);
+							var data = await result.json();
+							if (result.ok && data.message !== "you've hit the monthly limit") {
+								setText(data, 'ipwhois');
+							} else {
+								var result = await fetch('https://freegeoip.app/json/' + strangerIP);
 								if (result.ok) {
 									var data = await result.json();
-									setText(data, 'extreme-ip-lookup');
-								} else {
-									list.textContent = 'Could not connect to any API <br />Try your own API Key';
+									setText(data, 'freegeoip');
+								}
+								else {
+									var result = await fetch('https://extreme-ip-lookup.com/json/' + strangerIP);
+									if (result.ok) {
+										var data = await result.json();
+										setText(data, 'extreme-ip-lookup');
+									} else {
+										list.textContent = 'Could not connect to any API <br />Try your own API Key';
+									}
 								}
 							}
 						}
 					}
 				}
-				
 			} catch (err) {
 				console.error(err.message || err);
 				if (err.message == 'Failed to fetch') {

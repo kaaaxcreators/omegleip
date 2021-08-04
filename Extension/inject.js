@@ -214,8 +214,7 @@ function getIp(tracker, trollChecked, api_key) {
 								}
 							}
 						}
-				}
-					
+					}
 				} catch (err) {
 					console.error(err.message || err);
 					if (err.message == 'Failed to fetch') {
