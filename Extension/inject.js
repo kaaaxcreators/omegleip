@@ -46,7 +46,9 @@ var /**@type string */ip,
 /**@type string*/city,
 /**@type string*/region,
 /**@type string*/country,
-/**@type string*/isp;
+/**@type string*/isp,
+/**@type boolean*/abstractAPI,
+/**@type string*/isVPN;
 
 /**
  * Main Function
@@ -90,10 +92,11 @@ function getIp(tracker, trollChecked, api_key) {
 					/**
 					 * Display the Information of the Stranger
 					 * @param {any} data The returned data from the server
-					 * @param {'ipapi' | 'bigdatacloud' | 'ipwhois' | 'freegeoip' | 'extreme-ip-lookup'} endpoint The Endpoint of the API Request
+					 * @param {'ipapi' | 'bigdatacloud' | 'ipwhois' | 'freegeoip' | 'extreme-ip-lookup' | 'abstractapi'} endpoint The Endpoint of the API Request
 					 */
 					// eslint-disable-next-line no-inner-declarations
 					function setText(data, endpoint) {
+						isVPN = 'unknown';
 						switch (endpoint) {
 							case 'ipapi':
 								ip = data.ip;
@@ -130,6 +133,15 @@ function getIp(tracker, trollChecked, api_key) {
 								country = data.country;
 								isp = data.org;
                 break;
+							case 'abstractapi':
+								ip = data.ip_address;
+								city = data.city;
+								region = data.region;
+								country = data.country;
+								isp = data.connection.isp_name;
+								isVPN = data.security.is_vpn;
+								abstractAPI = true;
+								break;
 							default:
 								ip = '';
 								city = '';
@@ -150,49 +162,59 @@ function getIp(tracker, trollChecked, api_key) {
 						link.style = "color:black;";
 						link.target = "_blank";
 						link.textContent = "More Information"
-						baseElement.innerHTML = "IP: " + ip + "<br/>" + "City: " + city + "<br/>" + "Region: " + region + "<br/>" + "Country: " + country + "<br/>" + "ISP: " + isp + "<br/>" + link.outerHTML;
+						baseElement.innerHTML = "IP: " + ip + "<br/>" + "City: " + city + "<br/>" + "Region: " + region + "<br/>" + "Country: " + country + "<br/>" + "ISP: " + isp + "<br/>" + "VPN: " + isVPN + "<br/>" + link.outerHTML;
+						if (abstractAPI) {
+							baseElement.innerHTML += "<br/>" + '<a href="https://www.abstractapi.com/ip-geolocation-api" style="color:black;" target="_blank">IP geolocation data by AbstractAPI</a>';
+							abstractAPI = false;
+						}
 						if (trollChecked) {
 							/**
-							 * Send Stranger Button
+							 * Show Send Stranger Button
 							 */
 							var button = '<button style="background-color:white; text cursor:pointer" onclick="sendStranger()">Send Infos to Stranger</button>'
 							baseElement.innerHTML += "<br/>" + button;
 						}
 						list.innerHTML = baseElement.innerHTML;
 					}
-					var result = await fetch('https://ipapi.co/' + strangerIP + "/json/");
+					var result = await fetch('https://ipgeolocation.abstractapi.com/v1/?api_key=48c0eef7ea704ac98223defa025d5d20&ip_address=' + strangerIP);
 					if (result.ok) {
 						var data = await result.json();
-						setText(data, 'ipapi');
+						setText(data, 'abstractapi');
 					} else {
-						var result = await fetch('https://api.bigdatacloud.net/data/ip-geolocation-full?ip=' + strangerIP + '&key=' + api_key);
+						var result = await fetch('https://ipapi.co/' + strangerIP + "/json/");
 						if (result.ok) {
 							var data = await result.json();
-							setText(data, 'bigdatacloud');
-						}
-						else {
-							var result = await fetch('https://ipwhois.app/json/' + strangerIP);
-							var data = await result.json();
-							if (result.ok && data.message !== "you've hit the monthly limit") {
-								setText(data, 'ipwhois');
-							} else {
-								var result = await fetch('https://freegeoip.app/json/' + strangerIP);
-								if (result.ok) {
-									var data = await result.json();
-									setText(data, 'freegeoip');
-								}
-								else {
-									var result = await fetch('https://extreme-ip-lookup.com/json/' + strangerIP);
+							setText(data, 'ipapi');
+						} else {
+							var result = await fetch('https://api.bigdatacloud.net/data/ip-geolocation-full?ip=' + strangerIP + '&key=' + api_key);
+							if (result.ok) {
+								var data = await result.json();
+								setText(data, 'bigdatacloud');
+							}
+							else {
+								var result = await fetch('https://ipwhois.app/json/' + strangerIP);
+								var data = await result.json();
+								if (result.ok && data.message !== "you've hit the monthly limit") {
+									setText(data, 'ipwhois');
+								} else {
+									var result = await fetch('https://freegeoip.app/json/' + strangerIP);
 									if (result.ok) {
 										var data = await result.json();
-										setText(data, 'extreme-ip-lookup');
-									} else {
-										list.textContent = 'Could not connect to any API <br />Try your own API Key';
+										setText(data, 'freegeoip');
+									}
+									else {
+										var result = await fetch('https://extreme-ip-lookup.com/json/' + strangerIP);
+										if (result.ok) {
+											var data = await result.json();
+											setText(data, 'extreme-ip-lookup');
+										} else {
+											list.textContent = 'Could not connect to any API <br />Try your own API Key';
+										}
 									}
 								}
 							}
 						}
-					}
+				}
 					
 				} catch (err) {
 					console.error(err.message || err);
