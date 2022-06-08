@@ -1,3 +1,5 @@
+I don't use Omegle anymore, so I wont check if the script still works (but it might still do)
+
 ## Omegle IP
 
 ### Get the IP from Strangers
