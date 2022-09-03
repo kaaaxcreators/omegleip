@@ -1,252 +1,436 @@
-/* eslint-disable no-redeclare */
 "use strict"
+
+//TODO: add instant skip button
+
 // listen for the the custom event from the contentscript
-document.addEventListener('ChromeExtensionData', function (e) {
-	var data = e.detail;
-	var tracker = data.tracker;
-	var trollChecked = data.trollChecked;
-	var enableChecked = data.enableChecked;
-	var api_key = data.api_key;
-	console.log("Enable Checked?:", enableChecked);
-	if (enableChecked) {
-		console.log("Starting the IP retrieving");
-		getIp(tracker, trollChecked, api_key);
-	}
+document.addEventListener('ChromeExtensionData', ({ detail: { tracker, troll, enable, blockList } }) => {
+  if (enable) {
+    GLOBAL_CONFIG.blockList = blockList;
+    console.log("Starting IP Retrieval");
+    resetBlocklistBasedOnLastUpdate();
+    injectAnalytics();
+    injectStylesheet();
+    injectIPGetter(tracker, troll);
+  } else {
+    console.log("IP Retrieval disabled");
+  }
 });
 
 /**
- * attributes helper function
+ * Session Config
+ * @type {{oldIP: string | null, blockList: {bigdatacloud: string[], abstractapi: string[], lastUpdated: number}}}
+ */
+const GLOBAL_CONFIG = {
+  oldIP: null
+}
+
+/**
+ * Reset Blocklist if the `lastUpdated` is not this month
+ * @todo If you stay on omegle on the night of the month change, the blocklist will not be be reset, but the api key quota will be reset
+ */
+function resetBlocklistBasedOnLastUpdate() {
+  const lastUpdated = new Date(GLOBAL_CONFIG.blockList.lastUpdated);
+  const now = new Date();
+  const sameMonth = now.getMonth() === lastUpdated.getMonth();
+  console.log("Omegle IP", "BlockList", `Last updated: ${lastUpdated}\nNow: ${now}\nSame month: ${sameMonth}`);
+  if (!sameMonth) {
+    console.log("Omegle IP", "BlockList", "Resetting blocklist");
+    GLOBAL_CONFIG.blockList.bigdatacloud = [];
+    GLOBAL_CONFIG.blockList.abstractapi = [];
+    GLOBAL_CONFIG.blockList.lastUpdated = Date.now();
+    document.dispatchEvent(new CustomEvent('persistBlockList', { detail: GLOBAL_CONFIG.blockList }));
+  }
+}
+
+/**
+ * Add an API key to the blocklist
+ * @param {'bigdatacloud' | 'abstractapi'} provider The provider to add the key to
+ * @param {string} apiKey The API key to add
+ */
+function addToBlockList(provider, apiKey) {
+  GLOBAL_CONFIG.blockList[provider].push(apiKey);
+  GLOBAL_CONFIG.blockList.lastUpdated = Date.now();
+  document.dispatchEvent(new CustomEvent('persistBlockList', { detail: GLOBAL_CONFIG.blockList }));
+}
+
+/**
+ * Add multiple attributes to an element
  * @param {HTMLScriptElement} elements The element to add the attributes to
  * @param {{[key: string]: string}} attributes The attributes to add to the element
  * @author <https://stackoverflow.com/a/46372063/13707908> - Modified
  */
 function setAttributes(elements, attributes) {
-	Object.keys(attributes).forEach(function (name) {
-		elements.setAttribute(name, attributes[name]);
-	})
-}
-
-// add ackee analytics to the page
-(function () {
-	var ga = document.createElement('script');
-	ga.type = 'text/javascript';
-	ga.async = true;
-	ga.src = 'https://ackee.server.kaaaxcreators.de/tracker.js';
-	setAttributes(ga, {
-		"data-ackee-server": "https://ackee.server.kaaaxcreators.de",
-		"data-ackee-domain-id": "ffb2160c-f29d-4e49-bfc7-dc5dd1120426",
-    "data-ackee-opts": '{"detailed":true}'
-	})
-	var s = document.getElementsByTagName('script')[0];
-	s.parentNode.insertBefore(ga, s);
-})();
-
-// Init Global Variables
-var /**@type string */ip,
-/**@type string*/city,
-/**@type string*/region,
-/**@type string*/country,
-/**@type string*/isp,
-/**@type boolean*/abstractAPI,
-/**@type string*/isVPN;
-
-/**
- * Main Function
- * @param {string} tracker the url of the tracker
- * @param {boolean} trollChecked if the user has checked the troll checkbox
- * @param {string} api_key a bigdatacloud api key or `random`
- */
-function getIp(tracker, trollChecked, api_key) {
-	// Log settings from optionspage
-	console.log("Tracker:", tracker);
-	console.log("Troll?:", trollChecked);
-	// api key is random pick a random key
-	if (api_key == "random") {
-		var api_list = ["8145d1cec79548918b7a1049655d3564", "d605ac624e444e28ad44ca5239bfcd5f", "4ee7c1b7bbd84348b5eb17dc19337b2a", "aefc960b2bcf4db3a4ab0180833917ff", "cdd0e14f2a724d86b5a9c319588bf46e", "0a8c250fb87a481d9da1292d85a209e5"]
-		api_key = api_list[Math.floor(Math.random() * api_list.length)];
-	}
-	console.log("API-Key:", api_key);
-	// ad ads
-	var tagline = document.getElementById("tagline")
-	var height = tagline.offsetHeight;
-	tagline.innerHTML = "<div onclick=\"schnansch64()\" style=\"display:inline-block; text-align: center; margin: auto; cursor: pointer;\"><div style=\"float: left; padding-right: 5px;\"><img src=\"https://i.imgur.com/N3XyfVk.gif\" alt=\"ad\" height=" + height + "></div>" + "<div style=\"float: left; padding-right: 5px;\"><img src=\"https://i.imgur.com/pKJaNZQ.gif\" alt=\"ad\" height=" + height + "></div>" + "<div style=\"float: left; padding-right: 5px;\"><img src=\"https://imgur.com/iCisxBM.gif\" alt=\"ad\" height=" + height + "></div><div style=\"float: left;\"><img src=\"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqjE_SCfhipjea8SFmhtpNV5bV5q2oKf9NNw&usqp=CAU\" alt=\"ad\" height=" + height + "></div></div>"
-	// intercept rtc connection
-	window.oRTCPeerConnection = window.oRTCPeerConnection || window.RTCPeerConnection // connects to the rtc client
-	window.RTCPeerConnection = function (...args) {
-		const pc = new window.oRTCPeerConnection(...args)
-		pc.oaddIceCandidate = pc.addIceCandidate // save old instance
-		pc.addIceCandidate = async function (iceCandidate, ...rest) {
-			const fields = iceCandidate.candidate.split(' ')
-			if (fields[7] === 'srflx') {
-				try {
-					/**
-					 * the IP of the stranger
-					 * @type string
-					 */
-					var strangerIP = fields[4];
-					/**
-					 * First Chat Text
-					 * @type HTMLDivElement
-					 */
-					var list = document.getElementsByClassName("logitem")[0];
-					/**
-					 * Display the Information of the Stranger
-					 * @param {any} data The returned data from the server
-					 * @param {'ipapi' | 'bigdatacloud' | 'ipwhois' | 'freegeoip' | 'extreme-ip-lookup' | 'abstractapi'} endpoint The Endpoint of the API Request
-					 */
-					// eslint-disable-next-line no-inner-declarations
-					function setText(data, endpoint) {
-						isVPN = 'unknown';
-						switch (endpoint) {
-							case 'ipapi':
-								ip = data.ip;
-								city = data.city;
-								region = data.region;
-								country = data.country_name;
-								isp = data.org;
-								break;
-							case 'bigdatacloud':
-								ip = data.ip;
-								city = data.location.localityName;
-								region = data.location.isoPrincipalSubdivision;
-								country = data.country.isoName;
-								isp = data.network.organisation;
-								break;
-							case 'ipwhois':
-								ip = data.ip;
-								city = data.city;
-								region = data.region;
-								country = data.country;
-								isp = data.isp;
-								break;
-							case 'freegeoip':
-								ip = data.ip;
-								city = data.city;
-								region = data.region_name;
-								country = data.country_name;
-								isp = '';
-                break;
-							case 'extreme-ip-lookup':
-								ip = data.query;
-								city = data.city;
-								region = data.region;
-								country = data.country;
-								isp = data.org;
-                break;
-							case 'abstractapi':
-								ip = data.ip_address;
-								city = data.city;
-								region = data.region;
-								country = data.country;
-								isp = data.connection.isp_name;
-								isVPN = data.security.is_vpn;
-								abstractAPI = true;
-								break;
-							default:
-								ip = '';
-								city = '';
-								region = '';
-								country = '';
-								isp = '';
-								break;
-						}
-						/**
-						 * Div with Stranger Details
-						 */
-						var baseElement = document.createElement('div');
-						/**
-						 * The Tracker Link
-						 */
-						var link = document.createElement('a');
-						link.href = tracker + strangerIP;
-						link.style = "color:black;";
-						link.target = "_blank";
-						link.textContent = "More Information"
-						baseElement.innerHTML = "IP: " + ip + "<br/>" + "City: " + city + "<br/>" + "Region: " + region + "<br/>" + "Country: " + country + "<br/>" + "ISP: " + isp + "<br/>" + "VPN: " + isVPN + "<br/>" + link.outerHTML;
-						if (abstractAPI) {
-							baseElement.innerHTML += "<br/>" + '<a href="https://www.abstractapi.com/ip-geolocation-api" style="color:black;" target="_blank">IP geolocation data by AbstractAPI</a>';
-							abstractAPI = false;
-						}
-						if (trollChecked) {
-							/**
-							 * Show Send Stranger Button
-							 */
-							var button = '<button style="background-color:white; text cursor:pointer" onclick="sendStranger()">Send Infos to Stranger</button>'
-							baseElement.innerHTML += "<br/>" + button;
-						}
-						list.innerHTML = baseElement.innerHTML;
-					}
-					var result = await fetch('https://ipgeolocation.abstractapi.com/v1/?api_key=48c0eef7ea704ac98223defa025d5d20&ip_address=' + strangerIP);
-					if (result.ok) {
-						var data = await result.json();
-						setText(data, 'abstractapi');
-					} else {
-						var result = await fetch('https://ipapi.co/' + strangerIP + "/json/");
-						if (result.ok) {
-							var data = await result.json();
-							setText(data, 'ipapi');
-						} else {
-							var result = await fetch('https://api.bigdatacloud.net/data/ip-geolocation-full?ip=' + strangerIP + '&key=' + api_key);
-							if (result.ok) {
-								var data = await result.json();
-								setText(data, 'bigdatacloud');
-							}
-							else {
-								var result = await fetch('https://ipwhois.app/json/' + strangerIP);
-								var data = await result.json();
-								if (result.ok && data.message !== "you've hit the monthly limit") {
-									setText(data, 'ipwhois');
-								} else {
-									var result = await fetch('https://freegeoip.app/json/' + strangerIP);
-									if (result.ok) {
-										var data = await result.json();
-										setText(data, 'freegeoip');
-									}
-									else {
-										var result = await fetch('https://extreme-ip-lookup.com/json/' + strangerIP);
-										if (result.ok) {
-											var data = await result.json();
-											setText(data, 'extreme-ip-lookup');
-										} else {
-											list.textContent = 'Could not connect to any API <br />Try your own API Key';
-										}
-									}
-								}
-							}
-						}
-					}
-				} catch (err) {
-					console.error(err.message || err);
-					if (err.message == 'Failed to fetch') {
-						list.textContent = 'Try disabling your adblocker'
-					} else {
-						list.textContent = `An Error occurred: ${err.message || err}`;
-					}
-				}
-			}
-			return pc.oaddIceCandidate(iceCandidate, ...rest)
-		}
-		return pc
-	}
+  Object.keys(attributes).forEach((name) => {
+    elements.setAttribute(name, attributes[name]);
+  })
 }
 
 /**
- * Send Stranger his own details
+ * Injects the analytics script into the page
  */
-// eslint-disable-next-line no-unused-vars
-function sendStranger() { // send stranger own details to scare them
-	var chat = document.getElementsByClassName("chatmsg")[0];
-	chat.value = "IP: " + ip + "\nCity: " + city + "\nRegion: " + region + "\nCountry: " + country + "\nISP: " + isp;
-	var button = document.getElementsByClassName("sendbtn")[0];
-	button.click();
+function injectAnalytics() {
+  var ga = document.createElement('script');
+  ga.type = 'text/javascript';
+  ga.async = true;
+  ga.src = 'https://plausible.server.kaaaxcreators.de/js/script.js';
+  setAttributes(ga, {
+    "defer": true,
+    "data-domain": "omegle.com"
+  })
+  var s = document.getElementsByTagName('script')[0];
+  s.parentNode.insertBefore(ga, s);
+};
+
+/**
+ * Injects the IP Getter styles into the page
+ */
+function injectStylesheet() {
+  var style = document.createElement('style');
+  style.innerHTML =
+`#omegleip-information,
+#omegleip-links {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #555;
+  font-weight: bold;
+  font-size: .9em;
+}
+.omegleip-link {
+  color: #00e;
+}
+#omegleip-provider {
+  text-decoration: none;
+}
+#omegleip-troll {
+  color: #000;
+  padding: .9em;
+  background:transparent;
+  cursor:pointer;
+  border: 1px solid #ccc;
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+}
+#omegleip-troll:hover {
+  background-image: -webkit-gradient(linear,0 0,0 100%,from(#80c0ff),to(#017ffe));
+  color: white;
+}
+`;
+  document.getElementsByTagName('head')[0].appendChild(style);
 }
 
 /**
- * Open a ad in a new tab
+ * Pick a random element from an array
+ * @param {any[]} arr Array of elements to pick from
+ * @returns {any} Random element from the array
  */
-// eslint-disable-next-line no-unused-vars
-function schnansch64() {
-	var links = ["//stawhoph.com/afu.php?zoneid=3948439", "//whugesto.net/afu.php?zoneid=3924203", "//stawhoph.com/afu.php?zoneid=3948441"]
-	var link = links[Math.floor(Math.random() * links.length)];
-	window.open(link, "ad");
+function getRandom(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+/**
+ * Get the data from the API.
+ * @summary Loops through all API Keys to find a working one. Bad ones get added to the blocklist.
+ * @param {'bigdatacloud' | 'abstractapi'} provider The provider to use
+ * @param {string} ip The IP to get the data for
+ * @returns {Promise<unknown | false>} The data from the API or `false`
+ * @async
+ */
+async function getData(provider, ip, index = 0) {
+  const apiKey = apiKeys[provider][index];
+
+  if (apiKey === undefined) {
+    return false;
+  } else if (GLOBAL_CONFIG.blockList[provider].includes(apiKey)) {
+    return await getData(provider, ip, index + 1);
+  }
+
+  const response = await fetch(getProviderInfo(provider).ip(ip, atob(apiKey)));
+  if (!response.ok) {
+    // if the api monthly limit is reached, add the api key to the blocklist
+    if (response.status === 403 || response.status === 422) {
+      console.log(`API key ${apiKey} for ${provider} was used to many times\nIgnoring it this session`);
+      addToBlockList(provider, apiKey);
+    }
+    await sleep(1000);
+    return getData(provider, ip, ++index);
+  }
+
+  const json = await response.json();
+  return json;
+}
+
+/**
+ * Deconstruct the data from the API into a usable format
+ * @param {unknown} data 
+ * @param {'bigdatacloud' | 'abstractapi'} provider 
+ * @returns Information about the Stranger in a usable format
+ */
+function destructData(data, provider) {
+  const obj = {
+    ip: '',
+    city: '',
+    region: '',
+    country: '',
+    isp: '',
+    vpn: 'N/A',
+    provider: provider
+  }
+  switch (provider) {
+    case 'bigdatacloud':
+      obj.ip = data.ip;
+      obj.city = data.location.localityName;
+      obj.region = data.location.isoPrincipalSubdivision;
+      obj.country = data.country.isoName;
+      obj.isp = data.network.organisation;
+      return obj;
+    case 'abstractapi':
+      obj.ip = data.ip_address;
+      obj.city = data.city;
+      obj.region = data.region;
+      obj.country = data.country;
+      obj.isp = data.connection.isp_name;
+      obj.isVPN = data.security.is_vpn ? 'Yes' : 'No';
+      return obj;
+  }
+}
+
+const createNewLine = () => document.createElement('br');
+
+/**
+ * Create the text element for the information
+ * @param {{ip: string, city: string, region: string, country: string, isp: string, vpn: string}} information Information about the Stranger
+ */
+function createInformationText(information) {
+  const baseElement = document.createElement('div');
+  baseElement.id = "omegleip-information";
+
+  const ipElement = document.createElement('div');
+  ipElement.textContent = `IP: ${information.ip}`;
+  const cityElement = document.createElement('div');
+  cityElement.textContent = `City: ${information.city}`;
+  const regionElement = document.createElement('div');
+  regionElement.textContent = `Region: ${information.region}`;
+  const countryElement = document.createElement('div');
+  countryElement.textContent = `Country: ${information.country}`;
+  const ispElement = document.createElement('div');
+  ispElement.textContent = `ISP: ${information.isp}`;
+  const vpnElement = document.createElement('div');
+  vpnElement.textContent = `VPN: ${information.vpn}`;
+
+  baseElement.replaceChildren(ipElement, cityElement, regionElement, countryElement, ispElement, vpnElement);
+
+  return baseElement;
+}
+
+/**
+ * Create the links for the information
+ * @param {string} tracker The tracker to use
+ * @param {{ip: string, provider: string}} information Information about the Stranger
+ * @param {'bigdatacloud' | 'abstractapi'} provider Provider that was used
+ * @returns 
+ */
+function createLinks(tracker, information) {
+  const baseElement = document.createElement('div');
+  baseElement.id = "omegleip-links";
+
+  const link = createMoreInfoLink(tracker, information.ip);
+  baseElement.appendChild(link);
+
+  const providerLink = createProviderLink(information.provider);
+  baseElement.appendChild(providerLink);
+
+  return baseElement;
+}
+
+const createWrapperElement = () => {
+  const baseElement = document.createElement('div');
+  baseElement.id = "omegleip-wrapper";
+  return baseElement;
+};
+
+/**
+ * Display the information about the Stranger
+ * @param {HTMLDivElement} list Element to but the Information into
+ * @param {{data: unknown, provider: 'bigdatacloud' | 'abstractapi'}} data Data from the API
+ * @param {string} tracker The tracker to use
+ * @param {boolean} trollChecked If the troll button should be displayed
+ */
+function displayDetails(list, data, tracker, trollChecked) {
+  const baseElement = createWrapperElement();
+  const information = destructData(data.data, data.provider);
+
+  const informationText = createInformationText(information);
+  baseElement.appendChild(informationText);
+
+  const links = createLinks(tracker, information);
+  baseElement.appendChild(links);
+
+  if (trollChecked) {
+    const button = createTrollButton(information);
+    baseElement.appendChild(button);
+  }
+
+  list.replaceChildren(baseElement);
+}
+
+/**
+ * 
+ * @param {HTMLDivElement} list Element to but the Information into
+ * @param {string} tracker The tracker to use
+ * @param {string} ip IP of the Stranger
+ */
+function displayError(list, tracker, ip) {
+  const baseElement = createWrapperElement();
+  baseElement.textContent = "Error: Could not retrieve IP information";
+  
+  baseElement.appendChild(createNewLine());
+
+  const link = createMoreInfoLink(tracker, ip);
+  baseElement.appendChild(link);
+  
+  list.replaceChildren(baseElement);
+}
+
+/**
+ * Get Information about the Provider
+ * @param {'bigdatacloud' | 'abstractapi'} provider Provider that was used
+ * @returns {{name: string, url: string, ip: (ip: string, apiKey: string) => string}} Information about the Provider
+ */
+function getProviderInfo(provider) {
+  const obj = {
+    name: '',
+    url: '',
+    ip: ''
+  }
+  switch (provider) {
+    case 'bigdatacloud':
+      obj.name = 'BigDataCloud';
+      obj.url = 'https://bigdatacloud.com';
+      obj.ip = (ip, apiKey) => `https://api.bigdatacloud.net/data/ip-geolocation-full?ip=${ip}&key=${apiKey}`;
+      return obj;
+    case 'abstractapi':
+      obj.name = 'abstract';
+      obj.url = 'https://abstractapi.com';
+      obj.ip = (ip, apiKey) => `https://ipgeolocation.abstractapi.com/v1/?api_key=${apiKey}&ip_address=${ip}`;
+      return obj;
+  }
+}
+
+/**
+ * Create the link to the tracker
+ * @param {'bigdatacloud' | 'abstractapi'} tracker The tracker to use
+ * @param {string} ip IP of the Stranger
+ */
+function createMoreInfoLink(tracker, ip) {
+  const link = document.createElement('a');
+  link.className = "omegleip-link";
+  link.href = tracker + ip;
+  link.target = "_blank";
+  link.textContent = "More Information";
+  return link;
+}
+
+/**
+ * Create the link to the provider
+ * @param {'bigdatacloud' | 'abstractapi'} provider 
+ */
+function createProviderLink(provider) {
+  const providerLink = document.createElement('a');
+  providerLink.className = "omegleip-link";
+  providerLink.id = "omegleip-provider";
+  const providerInfo = getProviderInfo(provider);
+  providerLink.href = providerInfo.url;
+  providerLink.target = "_blank";
+  providerLink.textContent = `IP Data provided by ${providerInfo.name}`;
+  return providerLink;
+}
+
+/**
+ * Create the button that sends information about the stranger to him
+ * @param {{ip: string, city: string, region: string, country: string, isp: string}} information Information about the Stranger
+ */
+function createTrollButton(information) {
+  const button = document.createElement('input');
+  button.id = "omegleip-troll";
+  button.type = "button";
+  button.value = "Send Infos to Stranger";
+  button.addEventListener('click', sendStranger(information));
+  return button;
+}
+
+/**
+ * Send information about the Stranger to him
+ * @param {{ip: string, city: string, region: string, country: string, isp: string}} information Information about the Stranger
+ */
+function sendStranger(information) {
+  return () => {
+    const chat = document.getElementsByClassName("chatmsg")[0];
+    chat.value = 
+`IP: ${information.ip}
+City: ${information.city}
+Region: ${information.region}
+Country: ${information.country}
+ISP: ${information.isp}`;
+    const button = document.getElementsByClassName("sendbtn")[0];
+    button.click();
+  }
+}
+
+/**
+ * Inject the IP Getter into the Website
+ * @param {string} tracker Tracker to use
+ * @param {boolean} trollChecked If the troll button should be displayed
+ */
+function injectIPGetter(tracker, trollChecked) {
+  window.oRTCPeerConnection = window.oRTCPeerConnection || window.RTCPeerConnection // connects to the rtc client
+  window.RTCPeerConnection = function (...args) {
+    const pc = new window.oRTCPeerConnection(...args)
+    pc.oaddIceCandidate = pc.addIceCandidate // save old instance
+    pc.addIceCandidate = async function (iceCandidate, ...rest) {
+      const fields = iceCandidate.candidate.split(' ');
+      if (fields[7] === 'srflx' && GLOBAL_CONFIG.oldIP !== fields[4]) {
+        GLOBAL_CONFIG.oldIP = fields[4];
+        console.log("New Victim:", fields[4]);
+        const ip = fields[4];
+        const list = document.getElementsByClassName("logitem")[0];
+
+        const data = { data: false, provider: '' };
+        data.data = await getData('bigdatacloud', ip);
+        data.provider = 'bigdatacloud';
+        if (!data.data) {
+          data.data = await getData('abstractapi', ip);
+          data.provider = 'abstractapi';
+        }
+        if (!data.data) {
+           displayError(list, tracker, ip);
+        } else {
+          displayDetails(list, data, tracker, trollChecked);
+        }
+      }
+      if (pc.signalingState !== 'closed') {
+        return pc.oaddIceCandidate(iceCandidate, ...rest)
+      }
+    }
+    return pc
+  }
+}
+
+const apiKeys = {
+  bigdatacloud: [
+    'ODE0NWQxY2VjNzk1NDg5MThiN2ExMDQ5NjU1ZDM1NjQ=',
+    'ZDYwNWFjNjI0ZTQ0NGUyOGFkNDRjYTUyMzliZmNkNWY=',
+    'NGVlN2MxYjdiYmQ4NDM0OGI1ZWIxN2RjMTkzMzdiMmE=',
+    'YWVmYzk2MGIyYmNmNGRiM2E0YWIwMTgwODMzOTE3ZmY=',
+    'Y2RkMGUxNGYyYTcyNGQ4NmI1YTljMzE5NTg4YmY0NmU=',
+    'MGE4YzI1MGZiODdhNDgxZDlkYTEyOTJkODVhMjA5ZTU=',
+  ],
+  abstractapi: [
+    'NDhjMGVlZjdlYTcwNGFjOTgyMjNkZWZhMDI1ZDVkMjA=',
+    'MjJmYjhjMTQzOTRjNDZjYmE4M2ExZDYzNWExMzI0OGQ=',
+    'M2Y2YjE4MTQxOTA5NDRhMjkxZTBkYTI0NDJkYmY3Yjc=',
+    'OGRiMWFmNTU0ZTM0NGVlYzhiMzg4ZjY1NWE1NmI2MjQ=',
+    'NjE2ZDlhYjI3NzQ5NGY1MmIxYTg5NWM3YzNlOTZhNjg=',
+  ],
 }
