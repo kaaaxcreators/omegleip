@@ -1,16 +1,16 @@
 "use strict"
 
-//TODO: add instant skip button
+// TODO: manifest v3
 
 // listen for the the custom event from the contentscript
-document.addEventListener('ChromeExtensionData', ({ detail: { tracker, troll, enable, blockList } }) => {
+document.addEventListener('ChromeExtensionData', ({ detail: { tracker, enable, blockList } }) => {
   if (enable) {
     GLOBAL_CONFIG.blockList = blockList;
     console.log("Starting IP Retrieval");
     resetBlocklistBasedOnLastUpdate();
     injectAnalytics();
     injectStylesheet();
-    injectIPGetter(tracker, troll);
+    injectIPGetter(tracker);
   } else {
     console.log("IP Retrieval disabled");
   }
@@ -87,7 +87,10 @@ function injectAnalytics() {
 function injectStylesheet() {
   var style = document.createElement('style');
   style.innerHTML =
-`#omegleip-information,
+`.logbox {
+  right: .5em;
+}
+#omegleip-information,
 #omegleip-links {
   display: flex;
   flex-direction: column;
@@ -102,7 +105,15 @@ function injectStylesheet() {
 #omegleip-provider {
   text-decoration: none;
 }
-#omegleip-troll {
+#omegleip-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: .5em;
+}
+#omegleip-buttons > * {
+  flex: 1;
+  border-radius: .3em;
   color: #000;
   padding: .9em;
   background:transparent;
@@ -110,11 +121,10 @@ function injectStylesheet() {
   border: 1px solid #ccc;
   font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
 }
-#omegleip-troll:hover {
+#omegleip-buttons > *:hover {
   background-image: -webkit-gradient(linear,0 0,0 100%,from(#80c0ff),to(#017ffe));
   color: white;
-}
-`;
+}`;
   document.getElementsByTagName('head')[0].appendChild(style);
 }
 
@@ -199,6 +209,77 @@ function destructData(data, provider) {
 const createNewLine = () => document.createElement('br');
 
 /**
+ * Get Information about the Provider
+ * @param {'bigdatacloud' | 'abstractapi'} provider Provider that was used
+ * @returns {{name: string, url: string, ip: (ip: string, apiKey: string) => string}} Information about the Provider
+ */
+function getProviderInfo(provider) {
+  const obj = {
+    name: '',
+    url: '',
+    ip: ''
+  }
+  switch (provider) {
+    case 'bigdatacloud':
+      obj.name = 'BigDataCloud';
+      obj.url = 'https://bigdatacloud.com';
+      obj.ip = (ip, apiKey) => `https://api.bigdatacloud.net/data/ip-geolocation-full?ip=${ip}&key=${apiKey}`;
+      return obj;
+    case 'abstractapi':
+      obj.name = 'abstract';
+      obj.url = 'https://abstractapi.com';
+      obj.ip = (ip, apiKey) => `https://ipgeolocation.abstractapi.com/v1/?api_key=${apiKey}&ip_address=${ip}`;
+      return obj;
+  }
+}
+
+const createWrapperElement = () => {
+  const baseElement = document.createElement('div');
+  baseElement.id = "omegleip-wrapper";
+  return baseElement;
+};
+
+/**
+ * Display the information about the Stranger
+ * @param {HTMLDivElement} list Element to but the Information into
+ * @param {{data: unknown, provider: 'bigdatacloud' | 'abstractapi'}} data Data from the API
+ * @param {string} tracker The tracker to use
+ */
+function displayDetails(list, data, tracker) {
+  const baseElement = createWrapperElement();
+  const information = destructData(data.data, data.provider);
+
+  const informationText = createInformationText(information);
+  baseElement.appendChild(informationText);
+
+  const links = createLinks(tracker, information);
+  baseElement.appendChild(links);
+
+  const buttons = createButtons(information);
+  baseElement.appendChild(buttons);
+
+  list.replaceChildren(baseElement);
+}
+
+/**
+ * 
+ * @param {HTMLDivElement} list Element to but the Information into
+ * @param {string} tracker The tracker to use
+ * @param {string} ip IP of the Stranger
+ */
+function displayError(list, tracker, ip) {
+  const baseElement = createWrapperElement();
+  baseElement.textContent = "Error: Could not retrieve IP information";
+  
+  baseElement.appendChild(createNewLine());
+  
+  const link = createMoreInfoLink(tracker, ip);
+  baseElement.appendChild(link);
+  
+  list.replaceChildren(baseElement);
+}
+
+/**
  * Create the text element for the information
  * @param {{ip: string, city: string, region: string, country: string, isp: string, vpn: string}} information Information about the Stranger
  */
@@ -244,80 +325,6 @@ function createLinks(tracker, information) {
   return baseElement;
 }
 
-const createWrapperElement = () => {
-  const baseElement = document.createElement('div');
-  baseElement.id = "omegleip-wrapper";
-  return baseElement;
-};
-
-/**
- * Display the information about the Stranger
- * @param {HTMLDivElement} list Element to but the Information into
- * @param {{data: unknown, provider: 'bigdatacloud' | 'abstractapi'}} data Data from the API
- * @param {string} tracker The tracker to use
- * @param {boolean} trollChecked If the troll button should be displayed
- */
-function displayDetails(list, data, tracker, trollChecked) {
-  const baseElement = createWrapperElement();
-  const information = destructData(data.data, data.provider);
-
-  const informationText = createInformationText(information);
-  baseElement.appendChild(informationText);
-
-  const links = createLinks(tracker, information);
-  baseElement.appendChild(links);
-
-  if (trollChecked) {
-    const button = createTrollButton(information);
-    baseElement.appendChild(button);
-  }
-
-  list.replaceChildren(baseElement);
-}
-
-/**
- * 
- * @param {HTMLDivElement} list Element to but the Information into
- * @param {string} tracker The tracker to use
- * @param {string} ip IP of the Stranger
- */
-function displayError(list, tracker, ip) {
-  const baseElement = createWrapperElement();
-  baseElement.textContent = "Error: Could not retrieve IP information";
-  
-  baseElement.appendChild(createNewLine());
-
-  const link = createMoreInfoLink(tracker, ip);
-  baseElement.appendChild(link);
-  
-  list.replaceChildren(baseElement);
-}
-
-/**
- * Get Information about the Provider
- * @param {'bigdatacloud' | 'abstractapi'} provider Provider that was used
- * @returns {{name: string, url: string, ip: (ip: string, apiKey: string) => string}} Information about the Provider
- */
-function getProviderInfo(provider) {
-  const obj = {
-    name: '',
-    url: '',
-    ip: ''
-  }
-  switch (provider) {
-    case 'bigdatacloud':
-      obj.name = 'BigDataCloud';
-      obj.url = 'https://bigdatacloud.com';
-      obj.ip = (ip, apiKey) => `https://api.bigdatacloud.net/data/ip-geolocation-full?ip=${ip}&key=${apiKey}`;
-      return obj;
-    case 'abstractapi':
-      obj.name = 'abstract';
-      obj.url = 'https://abstractapi.com';
-      obj.ip = (ip, apiKey) => `https://ipgeolocation.abstractapi.com/v1/?api_key=${apiKey}&ip_address=${ip}`;
-      return obj;
-  }
-}
-
 /**
  * Create the link to the tracker
  * @param {'bigdatacloud' | 'abstractapi'} tracker The tracker to use
@@ -332,6 +339,7 @@ function createMoreInfoLink(tracker, ip) {
   return link;
 }
 
+
 /**
  * Create the link to the provider
  * @param {'bigdatacloud' | 'abstractapi'} provider 
@@ -345,6 +353,19 @@ function createProviderLink(provider) {
   providerLink.target = "_blank";
   providerLink.textContent = `IP Data provided by ${providerInfo.name}`;
   return providerLink;
+}
+
+function createButtons(information) {
+  const baseElement = document.createElement('div');
+  baseElement.id = "omegleip-buttons";
+  
+  const trollButton = createTrollButton(information);
+  baseElement.appendChild(trollButton);
+
+  const skipButton = createSkipButton();
+  baseElement.appendChild(skipButton);
+
+  return baseElement;
 }
 
 /**
@@ -379,11 +400,38 @@ ISP: ${information.isp}`;
 }
 
 /**
+ * Create the button that instantly skips the stranger 
+ */
+function createSkipButton() {
+  const button = document.createElement('input');
+  button.id = "omegleip-skip";
+  button.type = "button";
+  button.value = "Instant Skip";
+  button.addEventListener('click', skipStranger);
+  return button;
+}
+
+/**
+ * Instantly Skip the Stranger
+ */
+const skipStranger = () => {
+  const button = document.getElementsByClassName("disconnectbtn")[0];
+  switch (button.textContent) {
+    case 'StopEsc':
+      button.click();
+      button.click();
+      break;
+    case 'Really?Esc':
+      button.click();
+      break;
+  }
+}
+
+/**
  * Inject the IP Getter into the Website
  * @param {string} tracker Tracker to use
- * @param {boolean} trollChecked If the troll button should be displayed
  */
-function injectIPGetter(tracker, trollChecked) {
+function injectIPGetter(tracker) {
   window.oRTCPeerConnection = window.oRTCPeerConnection || window.RTCPeerConnection // connects to the rtc client
   window.RTCPeerConnection = function (...args) {
     const pc = new window.oRTCPeerConnection(...args)
@@ -406,7 +454,7 @@ function injectIPGetter(tracker, trollChecked) {
         if (!data.data) {
            displayError(list, tracker, ip);
         } else {
-          displayDetails(list, data, tracker, trollChecked);
+          displayDetails(list, data, tracker);
         }
       }
       if (pc.signalingState !== 'closed') {

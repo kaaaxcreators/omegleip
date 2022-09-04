@@ -6,17 +6,15 @@ s.onload = () => {
 	// get data from storage
 	chrome.storage.sync.get({
 		tracker: "https://whatismyipaddress.com/ip/",
-		troll: true,
 		enable: true,
 		blockList: {
 			"bigdatacloud": [],
 			"abstractapi": [],
 			"lastUpdated": 0
 		}
-	}, ({tracker, troll, enable, blockList}) => {
+	}, ({tracker, enable, blockList}) => {
 		const data = {
 			tracker,
-			troll,
 			enable,
 			blockList
 		};
