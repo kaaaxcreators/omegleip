@@ -10,25 +10,25 @@ chrome.runtime.onInstalled.addListener((details) => {
 
 chrome.runtime.onMessage.addListener((message) => {
   if (message === 'checkVersion') {
-    getVersion(sendResponse);
+    getVersion();
   }
 });
 
-async function getVersion(sendResponse) {
+async function getVersion() {
   try {
     const response = await fetch('https://api.github.com/repos/kaaaxcreators/omegleip/releases/latest');
     const json = await response.json();
     const tag_name = json.tag_name;
     const version = tag_name.replace("v", "");
     if (tag_name.charAt(0) == "v") {
-        checkVersion(version, sendResponse)
+        checkVersion(version)
     }
   } catch (e) {
     console.log(e);
   }
 }
 
-function checkVersion(version, sendResponse) {
+function checkVersion(version) {
   const manifestData = chrome.runtime.getManifest();
   if (version > manifestData.version) {
       console.log('Newer Version available')
