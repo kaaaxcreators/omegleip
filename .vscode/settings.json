@@ -1,5 +1,6 @@
 {
   "files.eol": "\n",
   "editor.tabSize": 2,
-  "editor.useTabStops": false
+  "editor.useTabStops": false,
+  "liveServer.settings.root": "/Website"
 }
