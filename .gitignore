@@ -106,6 +106,7 @@ dist
 # TernJS port file
 .tern-port
 
-# Custom Files
+# Output
+Extension/*.zip
 *.sig
 *.checksum
