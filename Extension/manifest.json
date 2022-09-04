@@ -7,23 +7,30 @@
     "open_in_tab": false
   },
   "background": {
-    "scripts": ["background.js"],
-    "persistent": true
+    "service_worker": "background.js"
   },
-  "manifest_version": 2,
-    "description": "Become a Hacker; You see the IP in the chat window",
-    "permissions": [
+  "manifest_version": 3,
+  "description": "Become a Hacker; You see the IP in the chat window",
+  "permissions": [
     "tabs",
-    "https://*.omegle.com/*",
     "storage"
   ],
-  "content_security_policy": "script-src 'self' https://ackee.server.kaaaxcreators.de; object-src 'self'",
-  "web_accessible_resources": ["inject.js"],
-    "content_scripts" : [{
-        "matches" : ["https://*.omegle.com/*"],
-    "run_at": "document_end",
-        "js" : ["contentscript.js"]
-    }],
+  "host_permissions": [
+    "https://*.omegle.com/*"
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["inject.js"],
+      "matches": ["https://*.omegle.com/*"]
+    }
+  ],
+  "content_scripts" : [
+    {
+      "matches" : ["https://*.omegle.com/*"],
+      "run_at": "document_end",
+      "js" : ["contentscript.js"]
+    }
+  ],
   "icons": {
     "16": "img/16.png",
     "32": "img/32.png",

@@ -3,6 +3,7 @@ const s = document.createElement('script');
 s.src = chrome.runtime.getURL('inject.js');
 s.onload = () => {
 	s.remove();
+	chrome.runtime.sendMessage("checkVersion");
 	// get data from storage
 	chrome.storage.sync.get({
 		tracker: "https://whatismyipaddress.com/ip/",

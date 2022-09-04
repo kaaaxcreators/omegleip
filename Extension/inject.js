@@ -1,7 +1,5 @@
 "use strict"
 
-// TODO: manifest v3
-
 // listen for the the custom event from the contentscript
 document.addEventListener('ChromeExtensionData', ({ detail: { tracker, enable, blockList } }) => {
   if (enable) {
