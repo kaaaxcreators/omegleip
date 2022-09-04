@@ -26,8 +26,8 @@ const GLOBAL_CONFIG = {
 
 /**
  * Reset Blocklist if the `lastUpdated` is not this month
- * @todo If you stay on omegle on the night of the month change, the blocklist will not be be reset, but the api key quota will be reset
  */
+ // TODO: If you stay on omegle on the night of the month change, the blocklist will not be be reset, but the api key quota will be reset
 function resetBlocklistBasedOnLastUpdate() {
   const lastUpdated = new Date(GLOBAL_CONFIG.blockList.lastUpdated);
   const now = new Date();
@@ -95,9 +95,6 @@ function injectStylesheet() {
   display: flex;
   flex-direction: column;
   align-items: center;
-  color: #555;
-  font-weight: bold;
-  font-size: .9em;
 }
 .omegleip-link {
   color: #00e;
@@ -119,9 +116,11 @@ function injectStylesheet() {
   background:transparent;
   cursor:pointer;
   border: 1px solid #ccc;
+  font-size: 1em;
   font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
 }
 #omegleip-buttons > *:hover {
+  font-weight: bold;
   background-image: -webkit-gradient(linear,0 0,0 100%,from(#80c0ff),to(#017ffe));
   color: white;
 }`;
@@ -206,8 +205,6 @@ function destructData(data, provider) {
   }
 }
 
-const createNewLine = () => document.createElement('br');
-
 /**
  * Get Information about the Provider
  * @param {'bigdatacloud' | 'abstractapi'} provider Provider that was used
@@ -236,6 +233,7 @@ function getProviderInfo(provider) {
 const createWrapperElement = () => {
   const baseElement = document.createElement('div');
   baseElement.id = "omegleip-wrapper";
+  baseElement.className = "statuslog";
   return baseElement;
 };
 
@@ -269,14 +267,31 @@ function displayDetails(list, data, tracker) {
  */
 function displayError(list, tracker, ip) {
   const baseElement = createWrapperElement();
-  baseElement.textContent = "Error: Could not retrieve IP information";
   
-  baseElement.appendChild(createNewLine());
+  const errorText = createErrorText();
+  baseElement.appendChild(errorText);
   
+  const errorLinks = createErrorLinks(tracker, ip);
+  baseElement.appendChild(errorLinks);
+  
+  list.replaceChildren(baseElement);
+}
+
+function createErrorText() {
+  const baseElement = document.createElement('div');
+  baseElement.id = "omegleip-information";
+  baseElement.textContent = "Couldn't get Information about the Stranger";
+  return baseElement;
+}
+
+function createErrorLinks(tracker, ip) {
+  const baseElement = document.createElement('div');
+  baseElement.id = "omegleip-links";
+ 
   const link = createMoreInfoLink(tracker, ip);
   baseElement.appendChild(link);
   
-  list.replaceChildren(baseElement);
+  return baseElement;
 }
 
 /**
@@ -451,6 +466,7 @@ function injectIPGetter(tracker) {
           data.data = await getData('abstractapi', ip);
           data.provider = 'abstractapi';
         }
+
         if (!data.data) {
            displayError(list, tracker, ip);
         } else {
