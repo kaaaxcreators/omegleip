@@ -1,4 +1,4 @@
-I don't use Omegle anymore, so the Extension wont be updated frequently. It should work tho.
+as Omegle is shut down, this extension can't be used anymore
 
 ## Omegle IP
 
